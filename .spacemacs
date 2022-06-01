@@ -537,6 +537,8 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
+  (setq-default show-trailing-whitespace t)
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
 )
 
 
@@ -555,6 +557,7 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
   (spacemacs/toggle-highlight-current-line-globally-off)
+
   (load "~/acl2/emacs/emacs-acl2.el")
 )
 
