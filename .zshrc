@@ -102,3 +102,7 @@ source $ZSH/oh-my-zsh.sh
 export TERM=xterm-256color
 
 source ~/.zsh_local
+
+# https://unix.stackexchange.com/questions/480451/how-to-start-tmux-upon-running-terminal
+# get into tmux at start
+[ -z "$TMUX" ] && { tmux attach || tmux new-session; }
