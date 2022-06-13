@@ -99,6 +99,10 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+whereami(){
+  echo $HOST
+}
+
 export TERM=xterm-256color
 
 source ~/.zsh_local
