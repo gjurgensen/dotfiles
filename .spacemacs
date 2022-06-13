@@ -32,7 +32,7 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(
+   '(markdown
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
@@ -70,7 +70,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-frozen-packages '()
 
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(smartparens)
 
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
@@ -537,6 +537,7 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
+  (setq-default abbrev-mode t)
   (setq-default show-trailing-whitespace t)
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
 )
@@ -558,7 +559,8 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
   (spacemacs/toggle-highlight-current-line-globally-off)
 
-  (load "~/acl2/emacs/emacs-acl2.el")
+# Replace with system-specific path
+#  (load "~/work/acl2/emacs/emacs-acl2.el")
 )
 
 
