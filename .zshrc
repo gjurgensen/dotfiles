@@ -105,4 +105,4 @@ source ~/.zsh_local
 
 # https://unix.stackexchange.com/questions/480451/how-to-start-tmux-upon-running-terminal
 # get into tmux at start
-[ -z "$TMUX" ] && { tmux attach || tmux new-session; }
+[ -z "$TMUX" ] && tmux new-session
