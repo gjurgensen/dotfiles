@@ -540,6 +540,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setq-default abbrev-mode t)
   (setq-default show-trailing-whitespace t)
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
+  (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
+  (setq save-abbrevs 'silent)
 )
 
 
@@ -559,8 +561,7 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
   (spacemacs/toggle-highlight-current-line-globally-off)
 
-# Replace with system-specific path
-#  (load "~/work/acl2/emacs/emacs-acl2.el")
+  ;; (load "~/work/acl2/emacs/emacs-acl2.el")
 )
 
 
