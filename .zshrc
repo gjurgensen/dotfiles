@@ -103,6 +103,8 @@ whereami(){
   echo $HOST
 }
 
+alias emacs='emacs -nw'
+
 export TERM=xterm-256color
 
 source ~/.zsh_local
