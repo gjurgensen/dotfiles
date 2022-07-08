@@ -564,6 +564,11 @@ before packages are loaded."
 
   (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
   (read-abbrev-file)
+
+  ;; courtesy of Eric Smith, modified for evil-mode / spacemacs compatibility
+  (defalias 'strip-encloser
+    (read-kbd-macro
+     "\\ C-M-k \\ C-M-u \\ C-y \\ C-M-k \\ C-M-b \\ C-M-q"))
 )
 
 
