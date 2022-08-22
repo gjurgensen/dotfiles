@@ -560,7 +560,7 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
   (spacemacs/toggle-highlight-current-line-globally-off)
 
-  ;; (load "~/work/acl2/emacs/emacs-acl2.el")
+  (load "~/work/acl2/books/emacs/emacs-acl2.el")
 
   (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
   (read-abbrev-file)
@@ -569,6 +569,9 @@ before packages are loaded."
   (defalias 'strip-encloser
     (read-kbd-macro
      "\\ C-M-k \\ C-M-u \\ C-y \\ C-M-k \\ C-M-b \\ C-M-q"))
+
+  (fset 'localize
+   (kmacro-lambda-form [?% ?a ?\) escape ?h ?% ?i ?\( ?l ?o ?c ?a ?l ?  escape ?l ?\\] 0 "%d"))
 )
 
 
