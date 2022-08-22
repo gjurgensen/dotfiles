@@ -104,7 +104,6 @@ whereami(){
 }
 
 alias emacs='emacs -nw'
-alias acl2='$ACL2'
 
 export TERM=xterm-256color
 
