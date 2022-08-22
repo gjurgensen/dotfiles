@@ -560,7 +560,7 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
   (spacemacs/toggle-highlight-current-line-globally-off)
 
-  (load "~/work/acl2/books/emacs/emacs-acl2.el")
+  (load "${ACL2_ROOT}/books/emacs/emacs-acl2.el")
 
   (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
   (read-abbrev-file)
