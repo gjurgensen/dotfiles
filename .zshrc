@@ -103,6 +103,11 @@ whereami(){
   echo $HOST
 }
 
+# https://www.marcinkossakowski.com/posts/2019-06-13-how-to-preview-csv-files-in-terminal.html
+viewcsv(){
+  cat $1 | sed -e 's/./ ./g' | column -t -s, | less -S
+}
+
 alias emacs='emacs -nw'
 
 export TERM=xterm-256color
