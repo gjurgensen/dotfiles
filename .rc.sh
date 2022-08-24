@@ -15,4 +15,6 @@ source ~/.rc_local.sh
 
 # https://unix.stackexchange.com/questions/480451/how-to-start-tmux-upon-running-terminal
 # get into tmux at start
-[ -z "$TMUX" ] && tmux new-session
+# if [ -z "$TMUX" ]; then
+#   tmux new-session
+# fi
