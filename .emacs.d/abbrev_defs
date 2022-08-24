@@ -6,6 +6,7 @@
     ("dxg" "(declare (xargs :guard (" nil :count 2)
     ("dxgt" "(declare (xargs :guard t))" nil :count 0)
     ("dxm" "(declare (xargs :measure (" nil :count 0)
+    ("hg" ":hints ((\"Goal\"" nil :count 0)
     ("hid" ":hints ((\"Goal\" :in-theory (disable" nil :count 0)
     ("hie" ":hints ((\"Goal\" :in-theory (enable" nil :count 6)
     ("hied" ":hints ((\"Goal\" :in-theory (e/d" nil :count 0)
