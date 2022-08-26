@@ -1,0 +1,7 @@
+[user]
+	email = grant@jurgensen.dev
+	name = Grant Jurgensen
+[color]
+	ui = auto
+[core]
+	editor = vim
