@@ -562,6 +562,15 @@ before packages are loaded."
 
   (load "${ACL2_ROOT}/books/emacs/emacs-acl2.el")
 
+  (define-key ctl-t-keymap "\C-r"
+    (lambda ()
+      (interactive)
+      (select-window (get-buffer-window (get-buffer *acl2-shell*)))
+      (insert
+       (format "(acl2::ld \"%s\")"
+               ;; https://stackoverflow.com/a/455500/11126632
+               (buffer-file-name (nth 1 (buffer-list)))))))
+
   (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
   (read-abbrev-file)
 
