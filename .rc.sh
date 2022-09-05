@@ -22,7 +22,12 @@ alias emacs='emacs -nw'
 
 export TERM=xterm-256color
 
-source ~/.rc_local.sh
+rc_local="${HOME}/.rc_local.sh"
+if [ -f "${rc_local}" ]; then
+  source "${rc_local}"
+else
+  echo "# Add machine-specific configuration here" > ${rc_local}
+fi
 
 # https://unix.stackexchange.com/questions/480451/how-to-start-tmux-upon-running-terminal
 # get into tmux at start
