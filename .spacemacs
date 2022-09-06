@@ -551,6 +551,15 @@ This function is called only while dumping Spacemacs configuration. You can
 dump."
 )
 
+(defun acl2-load-all-elsewhere ()
+  (interactive)
+  (select-window (get-buffer-window (get-buffer *acl2-shell*)))
+  (insert
+   (format "(acl2::ld \"%s\")"
+           ;; https://stackoverflow.com/a/455500/11126632
+           (buffer-file-name (nth 1 (buffer-list))))))
+
+;; TODO: function/key to grab current name of current s-expr and submit an acl2 ubt
 
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
@@ -558,18 +567,19 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+  (evil-set-initial-state 'shell-mode evil-default-state)
+
   (spacemacs/toggle-highlight-current-line-globally-off)
 
+  (defvar acl2-skip-shell nil)
+  (setq acl2-skip-shell t)
   (load "${ACL2_ROOT}/books/emacs/emacs-acl2.el")
 
-  (define-key ctl-t-keymap "\C-r"
-    (lambda ()
-      (interactive)
-      (select-window (get-buffer-window (get-buffer *acl2-shell*)))
-      (insert
-       (format "(acl2::ld \"%s\")"
-               ;; https://stackoverflow.com/a/455500/11126632
-               (buffer-file-name (nth 1 (buffer-list)))))))
+  (define-key ctl-t-keymap "\C-r" 'acl2-load-all-elsewhere)
+
+  (acl2-interface-dir)
+  (require 'acl2-mode (concat *acl2-interface-dir* "acl2-mode"))
+  (require 'acl2-indent)
 
   (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
   (read-abbrev-file)
@@ -596,7 +606,9 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(evil-want-Y-yank-to-eol nil))
+ '(evil-want-Y-yank-to-eol nil)
+ '(package-selected-packages
+   '(xclip cmake-mode ws-butler writeroom-mode winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package undo-tree treemacs-projectile treemacs-persp treemacs-icons-dired treemacs-evil toc-org symon symbol-overlay string-inflection string-edit spaceline-all-the-icons restart-emacs request rainbow-delimiters quickrun popwin pcre2el password-generator paradox overseer org-superstar open-junk-file nameless multi-line mmm-mode markdown-toc macrostep lorem-ipsum link-hint inspector info+ indent-guide hybrid-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-org helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio gh-md font-lock+ flycheck-package flycheck-elsa flx-ido fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-terminal-cursor-changer evil-surround evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-easymotion evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu emr elisp-slime-nav elisp-def editorconfig dumb-jump drag-stuff dotenv-mode dired-quick-sort diminish devdocs define-word column-enforce-mode clean-aindent-mode centered-cursor-mode auto-highlight-symbol auto-compile aggressive-indent ace-link ace-jump-helm-line)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
