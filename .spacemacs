@@ -541,6 +541,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setq-default show-trailing-whitespace t)
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
   (setq save-abbrevs 'silent)
+  (setq vc-follow-symlinks t)
 )
 
 
@@ -557,9 +558,36 @@ dump."
   (insert
    (format "(acl2::ld \"%s\")"
            ;; https://stackoverflow.com/a/455500/11126632
-           (buffer-file-name (nth 1 (buffer-list))))))
+           (buffer-file-name (nth 1 (buffer-list)))))
+  (evil-newline))
 
-;; TODO: function/key to grab current name of current s-expr and submit an acl2 ubt
+(defun submit-theorem-elsewhere ()
+  (interactive)
+  (enter-theorem-fn t)
+  (evil-newline))
+
+(defun acl2-submit-ubt ()
+  (interactive)
+  ;; TODO: get command-descriptor more intelligently
+  ;; (see :doc command-descriptor)
+  (sp-copy-sexp)
+  (select-window (get-buffer-window (get-buffer *acl2-shell*)))
+  (insert (format ":ubt %s" (car kill-ring-yank-pointer)))
+  (evil-newline))
+
+(defun acl2-submit-pe ()
+  (interactive)
+  (sp-copy-sexp)
+  (select-window (get-buffer-window (get-buffer *acl2-shell*)))
+  (insert (format ":pe %s" (car kill-ring-yank-pointer)))
+  (evil-newline))
+
+(defun acl2-submit-pr ()
+  (interactive)
+  (sp-copy-sexp)
+  (select-window (get-buffer-window (get-buffer *acl2-shell*)))
+  (insert (format ":pr %s" (car kill-ring-yank-pointer)))
+  (evil-newline))
 
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
@@ -576,6 +604,9 @@ before packages are loaded."
   (load "${ACL2_ROOT}/books/emacs/emacs-acl2.el")
 
   (define-key ctl-t-keymap "\C-r" 'acl2-load-all-elsewhere)
+  (define-key ctl-t-keymap "\C-u" 'acl2-submit-ubt)
+  (define-key ctl-t-keymap "\C-p" 'acl2-submit-pe)
+  (define-key ctl-t-keymap "\C-o" 'acl2-submit-pr)
 
   (acl2-interface-dir)
   (require 'acl2-mode (concat *acl2-interface-dir* "acl2-mode"))
@@ -590,7 +621,13 @@ before packages are loaded."
      "\\ C-M-k \\ C-M-u \\ C-y \\ C-M-k \\ C-M-b \\ C-M-q"))
 
   (fset 'localize
-   (kmacro-lambda-form [?% ?a ?\) escape ?h ?% ?i ?\( ?l ?o ?c ?a ?l ?  escape ?l ?\\] 0 "%d"))
+        (kmacro-lambda-form [?% ?a ?\) escape ?h ?% ?i ?\( ?l ?o ?c ?a ?l ?  escape ?l ?\\] 0 "%d"))
+
+  (fset 'evil-newline
+        (kmacro-lambda-form [?\\ ?\C-m] 0 "%d"))
+
+  ;; Overwrites enter-theorem-elsewhere
+  (define-key ctl-t-keymap "\C-e" 'submit-theorem-elsewhere)
 )
 
 
