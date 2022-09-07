@@ -20,6 +20,33 @@ latexc(){
 
 alias emacs='emacs -nw'
 
+alias lsa='ls -I "*.acl2" -I "*.cert" -I "*.cert.out" -I "*.lx64fsl" -I "*.port"'
+
+# TODO:
+# - how to point git-check-ignore to the right directory?
+# - add svn support
+li(){
+  ignore=$(ls $1 | git check-ignore --stdin --no-index)
+
+  ignore_args=""
+  IFS_BAK=${IFS}
+  IFS=$" "
+  for i in ${ignore};
+    do ignore_args="${ignore_args} -I $i"
+  done
+  # Is this necessary? Scope is unclear here
+  IFS=${IFS_BAK}
+
+  #echo "ls${ignore_args} $1"
+  ls${ignore_args} $1
+}
+
+# TODO: svn diff to temp file, and then only view if svn has good error code
+# Also maybe don't view empty diff
+svndiff(){
+  svn diff $@ --git | view - --not-a-term
+}
+
 export TERM=xterm-256color
 
 rc_local="${HOME}/.rc_local.sh"
