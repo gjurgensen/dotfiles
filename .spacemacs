@@ -552,42 +552,71 @@ This function is called only while dumping Spacemacs configuration. You can
 dump."
 )
 
+(defmacro save-window (&rest body)
+  `(let ((ret-window (get-buffer-window (buffer-file-name (nth 1 (buffer-list))))))
+     ,@body
+     (select-window ret-window)))
+
+(defun ashell ()
+  (interactive)
+  (save-window
+   (shell)
+   (insert "$ACL2")
+   (evil-newline)))
+
+(defun new-ashell ()
+  (interactive)
+  (save-window
+   (new-shell)
+   (insert "$ACL2")
+   (evil-newline)))
+
 (defun acl2-load-all-elsewhere ()
   (interactive)
-  (select-window (get-buffer-window (get-buffer *acl2-shell*)))
-  (insert
-   (format "(acl2::ld \"%s\")"
-           ;; https://stackoverflow.com/a/455500/11126632
-           (buffer-file-name (nth 1 (buffer-list)))))
-  (evil-newline))
+  (save-window
+   (select-window (get-buffer-window (get-buffer *acl2-shell*)))
+   (goto-char (point-max))
+   (insert
+    (format "(acl2::ld \"%s\")"
+            ;; https://stackoverflow.com/a/455500/11126632
+            (buffer-file-name (nth 1 (buffer-list)))))
+   (evil-newline)))
 
 (defun submit-theorem-elsewhere ()
   (interactive)
-  (enter-theorem-fn t)
-  (evil-newline))
+  (save-window
+   (enter-theorem-fn t)
+   (evil-newline)))
 
-(defun acl2-submit-ubt ()
+(defun acl2-submit-undo-elsewhere ()
   (interactive)
-  ;; TODO: get command-descriptor more intelligently
-  ;; (see :doc command-descriptor)
-  (sp-copy-sexp)
-  (select-window (get-buffer-window (get-buffer *acl2-shell*)))
-  (insert (format ":ubt %s" (car kill-ring-yank-pointer)))
-  (evil-newline))
+  (save-window
+   (select-window (get-buffer-window (get-buffer *acl2-shell*)))
+   (goto-char (point-max))
+   (insert
+    (format ":ubt! %s"
+            (acl2-event-name
+             (car (read-from-string (acl2-current-form-string t)))
+             t))
+   (evil-newline))))
 
 (defun acl2-submit-pe ()
   (interactive)
-  (sp-copy-sexp)
-  (select-window (get-buffer-window (get-buffer *acl2-shell*)))
-  (insert (format ":pe %s" (car kill-ring-yank-pointer)))
-  (evil-newline))
+  (save-window
+   (sp-copy-sexp)
+   (select-window (get-buffer-window (get-buffer *acl2-shell*)))
+   (goto-char (point-max))
+   (insert (format ":pe %s" (car kill-ring-yank-pointer)))
+   (evil-newline)))
 
 (defun acl2-submit-pr ()
   (interactive)
-  (sp-copy-sexp)
-  (select-window (get-buffer-window (get-buffer *acl2-shell*)))
-  (insert (format ":pr %s" (car kill-ring-yank-pointer)))
-  (evil-newline))
+  (save-window
+   (sp-copy-sexp)
+   (select-window (get-buffer-window (get-buffer *acl2-shell*)))
+   (goto-char (point-max))
+   (insert (format ":pr %s" (car kill-ring-yank-pointer)))
+   (evil-newline)))
 
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
@@ -604,7 +633,7 @@ before packages are loaded."
   (load "${ACL2_ROOT}/books/emacs/emacs-acl2.el")
 
   (define-key ctl-t-keymap "\C-r" 'acl2-load-all-elsewhere)
-  (define-key ctl-t-keymap "\C-u" 'acl2-submit-ubt)
+  (define-key ctl-t-keymap "\C-u" 'acl2-submit-undo-elsewhere)
   (define-key ctl-t-keymap "\C-p" 'acl2-submit-pe)
   (define-key ctl-t-keymap "\C-o" 'acl2-submit-pr)
 
