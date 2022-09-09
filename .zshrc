@@ -99,4 +99,8 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+# Use vi mode
+# TODO: set j/k to completion alternatives
+bindkey -v
+
 source ~/.rc.sh

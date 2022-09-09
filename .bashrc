@@ -121,8 +121,13 @@ fi
 # https://superuser.com/questions/892658/remote-ssh-commands-bash-bind-warning-line-editing-not-enabled
 if [[ "$(set -o | grep 'emacs\|\bvi\b' | cut -f2 | tr '\n' ':')" != 'off:off:' ]]; then
 
+  set editing-mode vi
+  set keymap vi
+  set -o vi
+
   # https://superuser.com/questions/288714/bash-autocomplete-like-zsh
-  bind 'set show-all-if-ambiguous on'
+  set show-all-if-ambiguous on
+  set completion-ignore-case on
   bind 'TAB:menu-complete'
 
   # https://stackoverflow.com/questions/42299437/zsh-like-history-in-bash

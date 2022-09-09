@@ -58,6 +58,6 @@ fi
 
 # https://unix.stackexchange.com/questions/480451/how-to-start-tmux-upon-running-terminal
 # get into tmux at start
-# if [ -z "$TMUX" ]; then
-#   tmux attach || tmux new-session
-# fi
+if [[ -v TMUX_ON_START && -z "$TMUX" ]]; then
+  tmux attach || tmux new-session
+fi
