@@ -22,6 +22,8 @@ alias emacs='emacs -nw'
 
 alias lsa='ls -I "*.acl2" -I "*.cert" -I "*.cert.out" -I "*.lx64fsl" -I "*.port"'
 
+alias view='vim - -R --not-a-term'
+
 # TODO:
 # - how to point git-check-ignore to the right directory?
 # - add svn support
@@ -44,7 +46,7 @@ li(){
 # TODO: svn diff to temp file, and then only view if svn has good error code
 # Also maybe don't view empty diff
 svndiff(){
-  svn diff $@ --git | view - --not-a-term
+  svn diff $@ --git | view
 }
 
 export TERM=xterm-256color
@@ -56,8 +58,6 @@ else
   echo "# Add machine-specific configuration here" > ${rc_local}
 fi
 
-# https://unix.stackexchange.com/questions/480451/how-to-start-tmux-upon-running-terminal
-# get into tmux at start
 if [[ -v TMUX_ON_START && -z "$TMUX" ]]; then
-  tmux attach || tmux new-session
+  ([[ -v TMUX_ATTACH_ON_START ]] && tmux attach) || tmux new-session
 fi
