@@ -12,7 +12,7 @@ function _omb_theme_PROMPT_COMMAND() {
     # local user_name="${_omb_prompt_white}\u${_omb_prompt_reset_color}"
     local base_directory="${_omb_prompt_bold_teal}\W${_omb_prompt_reset_color}"
     local SCM_THEME_PROMPT_PREFIX="${_omb_prompt_bold_navy}git:(${_omb_prompt_bold_brown}"
-    local SCM_THEME_PROMPT_SUFFIX="${_omb_prompt_reset_color} "
+    local SCM_THEME_PROMPT_SUFFIX="${_omb_prompt_reset_color}"
     local SCM_THEME_PROMPT_CLEAN="${_omb_prompt_bold_navy})${_omb_prompt_reset_color}"
     local SCM_THEME_PROMPT_DIRTY="${_omb_prompt_bold_navy}) ${_omb_prompt_olive}✗${_omb_prompt_reset_color}"
 
