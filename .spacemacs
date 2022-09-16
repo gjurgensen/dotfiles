@@ -543,7 +543,11 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setq save-abbrevs 'silent)
   (setq vc-follow-symlinks t)
 
-  (setq linum-relative-current-symbol "")
+  (setq linum-relative-current-symbol " ")
+  ;(setq linum-format "%d \u2502")
+  ;(setq linum-format "%d ")
+  (setq linum-relative-format "%2s\u2502")
+  (define-globalized-minor-mode global-linum-mode linum-mode (lambda () (linum-mode)))
 )
 
 
@@ -564,22 +568,22 @@ before packages are loaded."
 
   (spacemacs/toggle-highlight-current-line-globally-off)
 
-  (linum-mode)
   (require 'linum-relative)
+  (global-linum-mode)
   (linum-relative-on)
 
   (defvar acl2-skip-shell nil)
   (setq acl2-skip-shell t)
   (load "${ACL2_ROOT}/books/emacs/emacs-acl2.el")
 
-  ; (acl2-interface-dir)
-  ; (require 'acl2-mode (concat *acl2-interface-dir* "acl2-mode"))
-  ; (require 'acl2-indent)
-
   (load "${HOME}/.emacs.d/core/acl2-extensions.el")
 
   (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
   (read-abbrev-file)
+
+  ; (acl2-interface-dir)
+  ; (require 'acl2-mode (concat *acl2-interface-dir* "acl2-mode"))
+  ; (require 'acl2-indent)
 )
 
 
