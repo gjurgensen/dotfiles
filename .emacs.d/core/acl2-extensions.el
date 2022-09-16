@@ -76,9 +76,19 @@
    (insert (format ":pr %s" (car kill-ring-yank-pointer)))
    (evil-newline)))
 
+(defun acl2-submit-doc ()
+  (interactive)
+  (save-window
+   (sp-copy-sexp)
+   (select-window (get-buffer-window (get-buffer *acl2-shell*)))
+   (goto-char (point-max))
+   (insert (format ":doc %s" (car kill-ring-yank-pointer)))
+   (evil-newline)))
+
 (define-key ctl-t-keymap "\C-r" 'acl2-load-all-elsewhere)
 (define-key ctl-t-keymap "\C-u" 'acl2-submit-undo-elsewhere)
 (define-key ctl-t-keymap "\C-p" 'acl2-submit-pe)
 (define-key ctl-t-keymap "\C-o" 'acl2-submit-pr)
+(define-key ctl-t-keymap "\C-d" 'acl2-submit-doc)
 ;; Overwrites enter-theorem-elsewhere
 (define-key ctl-t-keymap "\C-e" 'submit-theorem-elsewhere)
