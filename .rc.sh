@@ -29,6 +29,8 @@ alias lsa='ls -I "*.acl2" -I "*.cert" -I "*.cert.out" -I "*.lx64fsl" -I "*.port"
 
 alias view='vim - -R --not-a-term'
 
+alias open='xdg-open'
+
 # TODO:
 # - how to point git-check-ignore to the right directory?
 # - add svn support
