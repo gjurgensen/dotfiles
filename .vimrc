@@ -11,9 +11,9 @@ set incsearch
 set ignorecase
 set smartcase
 
-" Hybrid numbering
+" line numbering
 set number relativenumber
-
+highlight LineNr ctermfg=grey
 
 " https://stackoverflow.com/questions/356126/how-can-you-automatically-remove-trailing-whitespace-in-vimutocmd BufWritePre :%s/\s\+$//e
 
