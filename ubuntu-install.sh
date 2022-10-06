@@ -21,6 +21,7 @@ if [ ! -f ~/.local/share/fonts/FiraCode-Regular.ttf ]; then
   cd fira
   curl https://fonts.google.com/download?family=Fira%20Code > fira_code.zip
   unzip fira_code.zip
+  mkdir -p ~/.local/share/fonts
   mv static/FiraCode-Regular.ttf ~/.local/share/fonts/FiraCode-Regular.ttf
   cd ..
   rm -rf fira
