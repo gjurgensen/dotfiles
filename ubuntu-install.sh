@@ -32,4 +32,4 @@ dconf load /org/gnome/terminal/legacy/profiles:/ < gnome-terminal-profiles.dconf
 
 stow --adopt .
 
-exec zsh
+echo "Install finished; restart shell to complete install."
