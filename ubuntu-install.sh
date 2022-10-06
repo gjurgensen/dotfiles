@@ -15,6 +15,9 @@ mkdir -p ~/.vim/bundle
 # install spacemacs
 [ -d ~/.emacs.d ] || git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
 
+# load terminal profiles
+dconf load /org/gnome/terminal/legacy/profiles:/ < gnome-terminal-profiles.dconf
+
 stow --adopt .
 
 exec zsh
