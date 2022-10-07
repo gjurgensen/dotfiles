@@ -67,8 +67,8 @@ set incsearch
 set ignorecase
 set smartcase
 
-" Hybrid numbering
-set number relativenumber
+" Relative line numbering
+set relativenumber
 
 " Invisible characters
 set list
