@@ -28,6 +28,8 @@ if [ ! -f ~/.local/share/fonts/FiraCode-Regular.ttf ]; then
 fi
 
 # load terminal profiles
+# To write new profiles to gnome-terminal-profiles.dconf, do:
+#   dconf dump /org/gnome/terminal/legacy/profiles:/ > gnome-terminal-profiles.dconf
 dconf load /org/gnome/terminal/legacy/profiles:/ < gnome-terminal-profiles.dconf
 
 # install terminfo
