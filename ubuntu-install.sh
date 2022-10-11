@@ -30,6 +30,9 @@ fi
 # load terminal profiles
 dconf load /org/gnome/terminal/legacy/profiles:/ < gnome-terminal-profiles.dconf
 
+# install terminfo
+tic -o ~/.terminfo xterm-256color.terminfo
+
 stow --adopt .
 
 echo "Install finished; restart shell to complete install."
