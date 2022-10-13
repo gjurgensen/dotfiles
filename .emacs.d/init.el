@@ -44,7 +44,6 @@
   :config
   (evil-mode 1)
   (evil-set-initial-state 'shell-mode evil-default-state)
-  ;; (define-key evil-normal-state-map (kbd " ")
   (define-key evil-motion-state-map " " 'evil-window-map)
   )
 
@@ -58,6 +57,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Global configuration
+
 
 (setq-default display-line-numbers-current-absolute nil)
 (setq-default display-line-numbers-type 'relative)
@@ -79,24 +79,24 @@
 (column-number-mode)
 (setq-default mode-line-end-spaces nil)
 
+(setq-default whitespace-style '(face tab-mark tabs))
+(setq-default custom-tab-width 4)
+(setq-default indent-tabs-mode nil)
+(global-whitespace-mode)
+
 ;; Report startup time
 (add-hook 'emacs-startup-hook
           (lambda ()
             (message "Emacs ready in %s with %d garbage collections."
                      (format "%.4f seconds"
-			     (float-time
-			      (time-subtract after-init-time before-init-time)))
+                             (float-time
+                              (time-subtract after-init-time before-init-time)))
                      gcs-done)))
-
-;; ;; Restore default GC threshold after startup
-;; (add-hook 'emacs-startup-hook
-;;           (lambda ()
-;;             (setq gc-cons-threshold 800000))) ;; 80KB
 
 ;; Custom GC threshold
 (add-hook 'emacs-startup-hook
           (lambda ()
-            (setq gc-cons-threshold 10000000))) ;; 1MB
+            (setq gc-cons-threshold 10000000))) ;; 1MB (default is 80KB)
 
 
 (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
@@ -142,4 +142,8 @@
  '(minibuffer-prompt ((t (:foreground "brightgreen"))))
  '(mode-line ((t (:background "brightblack" :foreground "black" :box (:line-width -1 :style released-button)))))
  '(mode-line-inactive ((t (:inherit mode-line :weight light))))
+ '(whitespace-indentation ((t (:inherit whitespace-space))))
+ '(whitespace-newline ((t (:foreground "brightblack" :weight normal))))
+ '(whitespace-space ((t (:foreground "brightblack"))))
+ '(whitespace-tab ((t (:foreground "brightblack"))))
  '(window-divider ((t (:foreground "brightblack")))))
