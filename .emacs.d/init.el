@@ -42,7 +42,11 @@
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
   :config
-  (evil-mode 1))
+  (evil-mode 1)
+  (evil-set-initial-state 'shell-mode evil-default-state)
+  ;; (define-key evil-normal-state-map (kbd " ")
+  (define-key evil-motion-state-map " " 'evil-window-map)
+  )
 
 (use-package evil-collection
   :after evil
