@@ -13,7 +13,7 @@ mkdir -p ~/.vim/bundle
 [ -d ~/.vim/bundle/Vundle.vim ] || git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
 # install spacemacs
-[ -d ~/.emacs.d ] || git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
+# [ -d ~/.emacs.d ] || git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
 
 # install fira code font
 if [ ! -f ~/.local/share/fonts/FiraCode-Regular.ttf ]; then
