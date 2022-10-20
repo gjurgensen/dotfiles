@@ -24,6 +24,8 @@ filetype plugin indent on
 let g:gruvbox_italic=1
 let g:gruvbox_transparent_bg=1
 
+set background=dark
+
 "Use 24-bit (true-color) mode in Vim/Neovim when outside tmux.
 "(see < http://sunaku.github.io/tmux-24bit-color.html#usage > for more information.)
 if (has("nvim"))
@@ -69,7 +71,8 @@ set relativenumber
 
 " Invisible characters
 set list
-set listchars=tab:>\ ,space:·,trail:!,eol:¬
+" set listchars=tab:>\ ,space:·,trail:!,eol:¬
+set listchars=tab:>\ ,trail:!
 
 " Exit terminal mode with <Esc>
 tnoremap <Esc> <C-\><C-n>
@@ -80,6 +83,14 @@ nnoremap <Space> <C-W>
 " Pseudo maximize
 " broken
 " nnoremap <C-W><M> <C-W><_><C-W><C-|>
+
+" cycle/delete buffers quickly
+map gn :bn<CR>
+map gp :bp<CR>
+map gd :bd<CR>
+
+" Binding for nerdtree
+nnoremap <C-n> :NERDTree<CR>
 
 " Strip trailing whitespace on save
 " https://stackoverflow.com/questions/356126/how-can-you-automatically-remove-trailing-whitespace-in-vimutocmd
