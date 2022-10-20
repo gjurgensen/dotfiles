@@ -15,6 +15,8 @@ Plugin 'morhetz/gruvbox'
 
 Plugin 'kien/rainbow_parentheses.vim'
 
+Plugin 'preservim/nerdtree'
+
 call vundle#end()
 filetype plugin indent on
 
