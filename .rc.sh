@@ -31,6 +31,8 @@ alias view='vim - -R --not-a-term'
 
 alias open='xdg-open'
 
+alias sup='sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y'
+
 # TODO:
 # - how to point git-check-ignore to the right directory?
 # - add svn support
