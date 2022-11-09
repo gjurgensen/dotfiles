@@ -34,6 +34,7 @@ dconf load /org/gnome/terminal/legacy/profiles:/ < gnome-terminal-profiles.dconf
 
 # install terminfo
 tic -o ~/.terminfo xterm-256color.terminfo
+tic -x -o ~/.terminfo xterm-emacs.terminfo
 
 stow --adopt .
 
