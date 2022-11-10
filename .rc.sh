@@ -23,9 +23,11 @@ latexc(){
   fi
 }
 
-alias emacs='emacs -nw'
+alias emacs='TERM=xterm-emacs emacs -nw'
 
-alias lsa='ls -I "*.acl2" -I "*.cert" -I "*.cert.out" -I "*.lx64fsl" -I "*.port"'
+alias lsa='ls -I "*.acl2" -I "*.cert" -I "*.cert.out" -I "*.lx64fsl" -I "*.lx86cl64" -I "*.port"'
+
+alias lsi='ls -I "*.acl2" -I "*.cert" -I "*.cert.out" -I "*.lx64fsl" -I "*.lx86cl64" -I "*.port" -I "*.o" -I "*.bak*" -I "*~"'
 
 alias view='vim - -R --not-a-term'
 
