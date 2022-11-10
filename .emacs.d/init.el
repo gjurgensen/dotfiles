@@ -123,10 +123,15 @@
 
 (setq vc-follow-symlinks t)
 
+(defun wload (file)
+  (or (load file t)
+      (progn (warn "Failed to load file: %s" file)
+             nil)))
+
 (defvar acl2-skip-shell nil)
 (setq acl2-skip-shell t)
-(if (load "${ACL2_ROOT}/books/emacs/emacs-acl2.el" t)
-    (load "${HOME}/.emacs.d/core/acl2-extensions.el" t))
+(if (wload "${ACL2_ROOT}/books/emacs/emacs-acl2.el")
+    (wload "${HOME}/.emacs.d/core/acl2-extensions.el"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
