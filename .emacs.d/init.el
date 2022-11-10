@@ -125,8 +125,8 @@
 
 (defvar acl2-skip-shell nil)
 (setq acl2-skip-shell t)
-(load "${ACL2_ROOT}/books/emacs/emacs-acl2.el")
-(load "${HOME}/.emacs.d/core/acl2-extensions.el")
+(if (load "${ACL2_ROOT}/books/emacs/emacs-acl2.el" t)
+    (load "${HOME}/.emacs.d/core/acl2-extensions.el" t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
