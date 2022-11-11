@@ -25,8 +25,9 @@
   '(evil
     evil-collection
     use-package
-    proof-general
     autothemer
+    xclip
+    proof-general
     ))
 
 ;; Update with M-x list-packages U x
@@ -73,10 +74,20 @@
   (load "${HOME}/.emacs.d/gruvbox-theme.el")
   (load-theme 'gruvbox t))
 
+(use-package xclip
+  :ensure t
+  :config
+  (xclip-mode 1))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Global configuration
+
+;; hacky?
+(add-hook 'window-setup-hook
+          (lambda ()
+            (unless (display-graphic-p (selected-frame))
+              (set-face-background 'default "unspecified-bg" (selected-frame)))))
 
 (setq-default display-line-numbers-current-absolute nil)
 (setq-default display-line-numbers-type 'relative)
