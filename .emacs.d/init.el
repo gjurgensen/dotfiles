@@ -6,7 +6,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq custom-file "~/.emacs.d/custom.el")
-(load custom-file)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -27,6 +26,7 @@
     evil-collection
     use-package
     proof-general
+    autothemer
     ))
 
 ;; Update with M-x list-packages U x
@@ -67,11 +67,16 @@
 
 (use-package proof-general)
 
+(use-package autothemer
+  :ensure t
+  :config
+  (load "${HOME}/.emacs.d/gruvbox-theme.el")
+  (load-theme 'gruvbox t))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Global configuration
-
 
 (setq-default display-line-numbers-current-absolute nil)
 (setq-default display-line-numbers-type 'relative)
