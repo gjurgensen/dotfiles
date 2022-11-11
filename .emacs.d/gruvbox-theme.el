@@ -17,7 +17,6 @@
    (gruv-bg4    "#a89984")
    (gruv-gray   "#928374"))
 
-  ;; TODO: make background transparent in tui
   ((default                      (:foreground gruv-fg :background gruv-bg))
    (highlight                    (:foreground gruv-fg :background gruv-bg2))
    (cursor                       (:background gruv-fg))
@@ -35,6 +34,7 @@
    (line-number                  (:foreground gruv-gray))
    (custom-variable-tag          (:foreground gruv-blue :bold t))
    (font-lock-builtin-face       (:foreground gruv-purple))
+   (font-lock-type-face          (:foreground gruv-orange))
    (font-lock-comment-face       (:foreground gruv-gray :italic t))
    (font-lock-constant-face      (:foreground gruv-blue))
    (font-lock-function-name-face (:foreground gruv-cyan))
@@ -48,13 +48,23 @@
    (whitespace-tab               (:foreground gruv-gray))
    (whitespace-indentation       (:inherit 'whitespace-space))
 
-   (compilation-info                          (:foreground gruv-green))
-   (compilation-mode-line-fail                (:foreground gruv-red))
-   (error                                     (:foreground gruv-orange :bold t))
-   (success                                   (:foreground gruv-green :bold t))
-   (warning                                   (:foreground gruv-red :bold t))
+   (compilation-info             (:foreground gruv-green))
+   (compilation-mode-line-fail   (:foreground gruv-red))
+   (error                        (:foreground gruv-orange :bold t))
+   (success                      (:foreground gruv-green :bold t))
+   (warning                      (:foreground gruv-red :bold t))
 
-   ;; TODO: rainbow-delimiter-depth-n-face
+   (rainbow-delimiters-depth-1-face    (:foreground gruv-green))
+   (rainbow-delimiters-depth-2-face    (:foreground gruv-blue))
+   (rainbow-delimiters-depth-3-face    (:foreground gruv-purple))
+   (rainbow-delimiters-depth-4-face    (:foreground gruv-yellow))
+   (rainbow-delimiters-depth-5-face    (:foreground gruv-orange))
+   (rainbow-delimiters-depth-6-face    (:foreground gruv-cyan))
+   (rainbow-delimiters-depth-7-face    (:foreground gruv-green))
+   (rainbow-delimiters-depth-8-face    (:foreground gruv-blue))
+   (rainbow-delimiters-depth-9-face    (:foreground gruv-purple))
+   (rainbow-delimiters-unmatched-face  (:foreground gruv-red))
+   (rainbow-delimiters-mismatched-face (:foreground gruv-red))
    )
 
   (custom-theme-set-variables 'gruvbox

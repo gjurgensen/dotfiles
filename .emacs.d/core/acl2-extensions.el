@@ -1,4 +1,7 @@
-;; courtesy of Eric Smith, modified for evil-mode / spacemacs compatibility
+;; Dependencies:
+;; 1. smartparens (sp-copy-sexp)
+
+;; courtesy of Eric Smith, modified for evil-mode compatibility
 (defalias 'strip-encloser
   (read-kbd-macro
    "\\ C-M-k \\ C-M-u \\ C-y \\ C-M-k \\ C-M-b \\ C-M-q"))

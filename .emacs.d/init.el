@@ -6,6 +6,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq custom-file "~/.emacs.d/custom.el")
+(load custom-file)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -26,6 +27,8 @@
     evil-collection
     use-package
     autothemer
+    smartparens
+    rainbow-delimiters
     xclip
     proof-general
     ))
@@ -51,8 +54,15 @@
   :config
   (evil-mode 1)
   (evil-set-initial-state 'shell-mode evil-default-state)
+  ;; (evil-set-initial-state 'man-mode evil-default-state)
   (define-key evil-motion-state-map " " 'evil-window-map)
   )
+
+;; (use-package man
+;;   :config
+;;   ;; (define-key man-mode-map " " nil)
+;;   ;; (setq man-notify-method 'pushy)
+;;   )
 
 (use-package evil-collection
   :after evil
@@ -66,7 +76,7 @@
   ;; (setenv "SHELL" "/bin/sh")
   )
 
-(use-package proof-general)
+(use-package smartparens)
 
 (use-package autothemer
   :ensure t
@@ -74,10 +84,17 @@
   (load "${HOME}/.emacs.d/gruvbox-theme.el")
   (load-theme 'gruvbox t))
 
+(use-package rainbow-delimiters
+  :config
+  (add-hook 'lisp-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode))
+
 (use-package xclip
   :ensure t
   :config
   (xclip-mode 1))
+
+(use-package proof-general)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -87,6 +104,7 @@
 (add-hook 'window-setup-hook
           (lambda ()
             (unless (display-graphic-p (selected-frame))
+              (set-display-table-slot (or buffer-display-table standard-display-table) 'vertical-border ?│)
               (set-face-background 'default "unspecified-bg" (selected-frame)))))
 
 (setq-default display-line-numbers-current-absolute nil)
@@ -115,9 +133,9 @@
 (global-whitespace-mode)
 
 ;; I couldn't figure out how else to set this on startup
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (set-display-table-slot (or buffer-display-table standard-display-table) 'vertical-border ?│)))
+;; (add-hook 'emacs-startup-hook
+;;           (lambda ()
+;;             (set-display-table-slot (or buffer-display-table standard-display-table) 'vertical-border ?│)))
 
 ;; Report startup time
 (add-hook 'emacs-startup-hook
