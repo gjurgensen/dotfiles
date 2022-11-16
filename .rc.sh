@@ -23,7 +23,8 @@ latexc(){
   fi
 }
 
-alias emacs='TERM=xterm-emacs emacs -nw'
+alias emacs='TERM=xterm-emacs emacsclient --alternate-editor=""'
+alias gemacs='emacsclient -c -n --alternate-editor=""'
 
 alias lsa='ls -I "*.acl2" -I "*.cert" -I "*.cert.out" -I "*.lx64fsl" -I "*.lx86cl64" -I "*.port"'
 
@@ -59,6 +60,9 @@ li(){
 svndiff(){
   svn diff $@ --git | view
 }
+
+export EDITOR=nvim
+export MANPAGER='nvim +Man!'
 
 export TERM=xterm-256color
 
