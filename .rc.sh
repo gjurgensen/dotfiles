@@ -3,6 +3,10 @@ mkcd(){
   cd $1
 }
 
+bak(){
+    cp -r $1 $1.bak
+}
+
 whereami(){
   echo $HOST
 }
@@ -23,7 +27,7 @@ latexc(){
   fi
 }
 
-alias emacs='TERM=xterm-emacs emacsclient --alternate-editor=""'
+alias emacs='TERM=xterm-emacs emacsclient --alternate-editor="" -nw'
 alias gemacs='emacsclient -c -n --alternate-editor=""'
 
 alias lsa='ls -I "*.acl2" -I "*.cert" -I "*.cert.out" -I "*.lx64fsl" -I "*.lx86cl64" -I "*.port"'
