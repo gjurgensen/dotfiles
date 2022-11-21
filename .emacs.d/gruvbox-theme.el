@@ -42,7 +42,12 @@
    (font-lock-string-face        (:foreground gruv-green))
    (font-lock-variable-name-face (:foreground gruv-yellow))
 
-   (proof-locked-face            (:background gruv-bg2 :distant-foreground gruv-fg))
+   ;; (proof-locked-face            (:background "#a27682" :distant-foreground gruv-fg))
+   ;; (proof-locked-face            (:background "#765e65" :distant-foreground gruv-fg))
+   ;; (proof-locked-face            (:background "#5d4e52" :distant-foreground gruv-fg))
+   ;; (proof-locked-face            (:background "#613843" :distant-foreground gruv-fg))
+   (proof-locked-face            (:background "#374661" :distant-foreground gruv-fg))
+
    (whitespace-newline           (:foreground gruv-gray))
    (whitespace-space             (:foreground gruv-gray))
    (whitespace-tab               (:foreground gruv-gray))

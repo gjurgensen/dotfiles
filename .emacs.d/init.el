@@ -25,7 +25,9 @@
 (defconst *pkgs*
   '(evil
     evil-collection
+    evil-org
     use-package
+    exec-path-from-shell
     autothemer
     smartparens
     rainbow-delimiters
@@ -70,6 +72,11 @@
   :config
   (evil-collection-init))
 
+(use-package exec-path-from-shell
+  :config
+  (add-to-list 'exec-path-from-shell-variables "ACL2_ROOT")
+  (exec-path-from-shell-initialize))
+
 (use-package tramp
   :config
   ;; (setq tramp-default-method "sshx")
@@ -96,16 +103,38 @@
 
 (use-package proof-general)
 
+(use-package org)
+
+(use-package evil-org
+  :ensure t
+  :after org
+  :hook (org-mode . (lambda () evil-org-mode))
+  :config
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Global configuration
 
+(defun set-tui-vertical-border()
+  ;; Thicker version:
+  ;; (set-display-table-slot (or buffer-display-table standard-display-table) 'vertical-border ?┃)
+  (set-display-table-slot buffer-display-table 'vertical-border ?│)
+  (set-display-table-slot standard-display-table 'vertical-border ?│)
+  )
+
+(defun set-tui-style()
+  (set-tui-vertical-border)
+  (set-face-background 'default "unspecified-bg" (selected-frame)))
+
 ;; hacky?
-(add-hook 'window-setup-hook
-          (lambda ()
-            (unless (display-graphic-p (selected-frame))
-              (set-display-table-slot (or buffer-display-table standard-display-table) 'vertical-border ?│)
-              (set-face-background 'default "unspecified-bg" (selected-frame)))))
+;; Not quite working, still messes up sometimes
+(unless (display-graphic-p (selected-frame))
+  (add-hook 'emacs-startup-hook 'set-tui-style)
+  (add-hook 'server-switch-hook 'set-tui-style)
+  (add-hook 'window-setup-hook  'set-tui-style)
+  )
 
 (setq-default display-line-numbers-current-absolute nil)
 (setq-default display-line-numbers-type 'relative)
@@ -167,7 +196,12 @@
       (progn (warn "Failed to load file: %s" file)
              nil)))
 
+;; TODO, make sure exec-path-from-shell is already loaded
 (defvar acl2-skip-shell nil)
 (setq acl2-skip-shell t)
 (if (wload "${ACL2_ROOT}/books/emacs/emacs-acl2.el")
     (wload "${HOME}/.emacs.d/core/acl2-extensions.el"))
+
+;; (set-display-table-slot (or buffer-display-table standard-display-table) 'vertical-border ?│)
+;; (set-display-table-slot buffer-display-table 'vertical-border ?│)
+;; (set-face-background 'default "unspecified-bg" (selected-frame))
