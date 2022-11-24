@@ -33,6 +33,7 @@
     rainbow-delimiters
     xclip
     proof-general
+    company-coq
     ))
 
 ;; Update with M-x list-packages U x
@@ -101,7 +102,13 @@
   :config
   (xclip-mode 1))
 
-(use-package proof-general)
+(use-package proof-general
+  :config
+  (setq proof-splash-enable nil))
+
+(use-package company-coq
+  :config
+  (add-hook 'coq-mode-hook #'company-coq-mode))
 
 (use-package org)
 
@@ -128,21 +135,26 @@
   (set-tui-vertical-border)
   (set-face-background 'default "unspecified-bg" (selected-frame)))
 
-;; hacky?
-;; Not quite working, still messes up sometimes
-(unless (display-graphic-p (selected-frame))
-  (add-hook 'emacs-startup-hook 'set-tui-style)
-  (add-hook 'server-switch-hook 'set-tui-style)
-  (add-hook 'window-setup-hook  'set-tui-style)
-  )
+(defun set-gui-style()
+  (set-frame-font "Fira Code 12" nil t))
+
+(if (display-graphic-p (selected-frame))
+    ;; Not quite working, still messes up sometimes
+    (progn
+      (add-hook 'emacs-startup-hook 'set-tui-style)
+      (add-hook 'server-switch-hook 'set-tui-style)
+      (add-hook 'window-setup-hook  'set-tui-style))
+  (progn
+    (add-hook 'emacs-startup-hook 'set-gui-style)
+    (add-hook 'server-switch-hook 'set-gui-style)
+    (add-hook 'window-setup-hook  'set-gui-style)))
+
 
 (setq-default display-line-numbers-current-absolute nil)
 (setq-default display-line-numbers-type 'relative)
 (global-display-line-numbers-mode)
-;; Alternative if don't want this enabled globally
-;; (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
-;; disable tool and menu bars
+;; Disable tool and menu bars
 (tool-bar-mode -1) ;; Don't bother for tui?
 (menu-bar-mode -1)
 
@@ -160,11 +172,6 @@
 (setq-default custom-tab-width 4)
 (setq-default indent-tabs-mode nil)
 (global-whitespace-mode)
-
-;; I couldn't figure out how else to set this on startup
-;; (add-hook 'emacs-startup-hook
-;;           (lambda ()
-;;             (set-display-table-slot (or buffer-display-table standard-display-table) 'vertical-border ?│)))
 
 ;; Report startup time
 (add-hook 'emacs-startup-hook
@@ -184,6 +191,7 @@
 (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
 (read-abbrev-file)
 (setq-default abbrev-mode t)
+(add-hook 'coq-mode-hook (lambda () (setq abbrev-mode nil)))
 (setq save-abbrevs 'silent)
 
 (setq-default show-trailing-whitespace t)
