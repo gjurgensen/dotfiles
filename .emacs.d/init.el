@@ -209,7 +209,3 @@
 (setq acl2-skip-shell t)
 (if (wload "${ACL2_ROOT}/books/emacs/emacs-acl2.el")
     (wload "${HOME}/.emacs.d/core/acl2-extensions.el"))
-
-;; (set-display-table-slot (or buffer-display-table standard-display-table) 'vertical-border ?│)
-;; (set-display-table-slot buffer-display-table 'vertical-border ?│)
-;; (set-face-background 'default "unspecified-bg" (selected-frame))
