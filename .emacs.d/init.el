@@ -34,6 +34,7 @@
     xclip
     proof-general
     company-coq
+    doom-modeline
     ))
 
 ;; Update with M-x list-packages U x
@@ -43,6 +44,17 @@
   (dolist (pkg-name *pkgs*)
     (package-install pkg-name)))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun previous-buffer ()
+  (interactive)
+  (switch-to-buffer (other-buffer (current-buffer) 1)))
+
+;; https://www.emacswiki.org/emacs/CommentingCode
+(defun uncomment-region (beg end)
+  "Like `comment-region' invoked with a C-u prefix arg."
+  (interactive "r")
+  (comment-region beg end -1))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -59,6 +71,8 @@
   (evil-set-initial-state 'shell-mode evil-default-state)
   ;; (evil-set-initial-state 'man-mode evil-default-state)
   (define-key evil-motion-state-map " " 'evil-window-map)
+  (define-key evil-visual-state-map " " 'evil-window-map)
+  (define-key evil-window-map (kbd "TAB") 'previous-buffer)
   )
 
 ;; (use-package man
@@ -108,7 +122,8 @@
 
 (use-package company-coq
   :config
-  (add-hook 'coq-mode-hook #'company-coq-mode))
+  (add-hook 'coq-mode-hook #'company-coq-mode)
+  (add-hook 'coq-mode-hook (lambda () (prettify-symbols-mode))))
 
 (use-package org)
 
@@ -119,6 +134,11 @@
   :config
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys))
+
+(use-package doom-modeline
+  :ensure t
+  :init
+  (doom-modeline-mode 1))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -136,7 +156,8 @@
   (set-face-background 'default "unspecified-bg" (selected-frame)))
 
 (defun set-gui-style()
-  (set-frame-font "Fira Code 12" nil t))
+  (set-frame-font "Fira Code 12" nil t)
+  (set-frame-parameter (selected-frame) 'alpha '(97 . 95)))
 
 (if (display-graphic-p (selected-frame))
     ;; Not quite working, still messes up sometimes
