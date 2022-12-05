@@ -27,6 +27,19 @@ latexc(){
   fi
 }
 
+term_color() {
+  if [ -z "${TERM_COLOR}" ]; then
+    printf "\e]111;\e\\";
+  else
+    printf "\e]11;${TERM_COLOR}\e\\";
+  fi
+}
+
+set_term_color() {
+  export TERM_COLOR="$1";
+  term_color
+}
+
 alias emacs='TERM=xterm-emacs emacsclient --alternate-editor="" -nw'
 alias gemacs='emacsclient -c -n --alternate-editor=""'
 alias killemacs='emacsclient -e "(kill-emacs)"'
@@ -80,21 +93,13 @@ rc_local="${HOME}/.rc_local.sh"
 if [ -f "${rc_local}" ]; then
   source "${rc_local}"
 else
-  echo "# Add machine-specific configuration here\n\n# export TERM_COLOR=\"#000000\"" > ${rc_local}
-fi
-
-if [ -n "${TERM_COLOR}" ]; then
-  printf "\e]11;${TERM_COLOR}\e\\";
+  echo "# Add machine-specific configuration here\n\n# set_term_color \"#000000\"" > ${rc_local}
 fi
 
 # https://unix.stackexchange.com/questions/315395/how-to-automatically-run-a-command-after-exiting-ssh
 ssh(){
   command ssh "$@";
-  if [ -z "${TERM_COLOR}" ]; then
-    printf "\e]111;\e\\";
-  else
-    printf "\e]11;${TERM_COLOR}\e\\";
-  fi
+  term_color
 }
 
 if [[ -v TMUX_ON_START && -z "$TMUX" ]]; then
