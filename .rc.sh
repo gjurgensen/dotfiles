@@ -66,8 +66,13 @@ svndiff(){
   svn diff $@ --git | view
 }
 
-export EDITOR=nvim
-export MANPAGER='nvim +Man!'
+if [ -z "$(which nvim)" ]; then
+  export EDITOR=nvim;
+  export MANPAGER='nvim +Man!';
+elif [ -z "$(which vim)" ]; then
+  export EDITOR=vim;
+  export MANPAGER='vim -M +MANPAGER -';
+fi
 
 export TERM=xterm-256color
 
