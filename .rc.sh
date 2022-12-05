@@ -75,8 +75,22 @@ rc_local="${HOME}/.rc_local.sh"
 if [ -f "${rc_local}" ]; then
   source "${rc_local}"
 else
-  echo "# Add machine-specific configuration here" > ${rc_local}
+  echo "# Add machine-specific configuration here\n\n# export TERM_COLOR=\"#000000\"" > ${rc_local}
 fi
+
+if [ -n "${TERM_COLOR}" ]; then
+  printf "\e]11;${TERM_COLOR}\e\\";
+fi
+
+# https://unix.stackexchange.com/questions/315395/how-to-automatically-run-a-command-after-exiting-ssh
+ssh(){
+  command ssh "$@";
+  if [ -z "${TERM_COLOR}" ]; then
+    printf "\e]111;\e\\";
+  else
+    printf "\e]11;${TERM_COLOR}\e\\";
+  fi
+}
 
 if [[ -v TMUX_ON_START && -z "$TMUX" ]]; then
   ([[ -v TMUX_ATTACH_ON_START ]] && tmux attach) || tmux new-session
