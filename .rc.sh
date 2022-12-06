@@ -79,10 +79,10 @@ svndiff(){
   svn diff $@ --git | view
 }
 
-if [ -z "$(which nvim)" ]; then
+if [ -n "$(which nvim)" ]; then
   export EDITOR=nvim;
   export MANPAGER='nvim +Man!';
-elif [ -z "$(which vim)" ]; then
+elif [ -n "$(which vim)" ]; then
   export EDITOR=vim;
   export MANPAGER='vim -M +MANPAGER -';
 fi
