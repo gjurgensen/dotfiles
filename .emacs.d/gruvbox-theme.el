@@ -42,16 +42,11 @@
    (font-lock-string-face        (:foreground gruv-green))
    (font-lock-variable-name-face (:foreground gruv-yellow))
 
-   ;; (proof-locked-face            (:background "#a27682" :distant-foreground gruv-fg))
-   ;; (proof-locked-face            (:background "#765e65" :distant-foreground gruv-fg))
-   ;; (proof-locked-face            (:background "#5d4e52" :distant-foreground gruv-fg))
-   ;; (proof-locked-face            (:background "#613843" :distant-foreground gruv-fg))
-   (proof-locked-face            (:background "#374661" :distant-foreground gruv-fg))
-
    (whitespace-newline           (:foreground gruv-gray))
    (whitespace-space             (:foreground gruv-gray))
    (whitespace-tab               (:foreground gruv-gray))
    (whitespace-indentation       (:inherit 'whitespace-space))
+   (trailing-whitespace          (:background gruv-gray))
 
    (compilation-info             (:foreground gruv-green))
    (compilation-mode-line-fail   (:foreground gruv-red))
@@ -59,6 +54,14 @@
    (success                      (:foreground gruv-green :bold t))
    (warning                      (:foreground gruv-red :bold t))
 
+   ;; Proof General
+   (proof-locked-face            (:background "#374661" :distant-foreground gruv-fg))
+   (coq-button-face              (:foreground gruv-bg4 :background gruv-bg1))
+
+   ;; Org Mode
+   (org-date                     (:underline t :foreground gruv-blue))
+
+   ;; Rainbow Delimiters
    (rainbow-delimiters-depth-1-face    (:foreground gruv-green))
    (rainbow-delimiters-depth-2-face    (:foreground gruv-blue))
    (rainbow-delimiters-depth-3-face    (:foreground gruv-purple))
@@ -71,6 +74,7 @@
    (rainbow-delimiters-unmatched-face  (:foreground gruv-red))
    (rainbow-delimiters-mismatched-face (:foreground gruv-red))
    )
+
 
   (custom-theme-set-variables 'gruvbox
                               `(ansi-color-names-vector [,gruv-red
