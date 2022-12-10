@@ -56,6 +56,9 @@
   (interactive "r")
   (comment-region beg end -1))
 
+(defalias 'evil-org-link-open
+  (read-kbd-macro "\\ C-c C-o"))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Configure packages
@@ -66,6 +69,7 @@
   (setq evil-want-C-u-scroll t)
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
+  (setq evil-want-C-i-jump nil)
   :config
   (evil-mode 1)
   (evil-set-initial-state 'shell-mode evil-default-state)
@@ -112,9 +116,12 @@
   (add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode))
 
 (use-package xclip
-  :ensure t
+  ;; :ensure t
   :config
-  (xclip-mode 1))
+  ;; (xclip-mode 1)
+  ;; https://stackoverflow.com/questions/37214940/require-package-only-if-available
+  (when (executable-find "xclip")
+    (xclip-mode 1)))
 
 (use-package proof-general
   :config
@@ -130,10 +137,12 @@
 (use-package evil-org
   :ensure t
   :after org
-  :hook (org-mode . (lambda () evil-org-mode))
+  ;; :hook (org-mode . (lambda () evil-org-mode))
   :config
   (require 'evil-org-agenda)
-  (evil-org-agenda-set-keys))
+  (evil-org-agenda-set-keys)
+  (add-hook 'org-mode-hook 'evil-org-mode)
+  (define-key evil-normal-state-map (kbd "RET") 'evil-org-link-open))
 
 (use-package doom-modeline
   :ensure t
@@ -144,31 +153,34 @@
 
 ;; Global configuration
 
-(defun set-tui-vertical-border()
+(defun set-tui-vertical-border ()
   ;; Thicker version:
   ;; (set-display-table-slot (or buffer-display-table standard-display-table) 'vertical-border ?┃)
   (set-display-table-slot buffer-display-table 'vertical-border ?│)
   (set-display-table-slot standard-display-table 'vertical-border ?│)
   )
 
-(defun set-tui-style()
+(defun set-tui-style ()
   (set-tui-vertical-border)
   (set-face-background 'default "unspecified-bg" (selected-frame)))
 
-(defun set-gui-style()
+(defun set-gui-style ()
   (set-frame-font "Fira Code 12" nil t)
   (set-frame-parameter (selected-frame) 'alpha '(97 . 95)))
 
+(defun set-style ()
+  (if (display-graphic-p (selected-frame))
+      (set-gui-style)
+    (set-tui-style)))
+
 (if (display-graphic-p (selected-frame))
-    ;; Not quite working, still messes up sometimes
-    (progn
-      (add-hook 'emacs-startup-hook 'set-tui-style)
-      (add-hook 'server-switch-hook 'set-tui-style)
-      (add-hook 'window-setup-hook  'set-tui-style))
-  (progn
     (add-hook 'emacs-startup-hook 'set-gui-style)
-    (add-hook 'server-switch-hook 'set-gui-style)
-    (add-hook 'window-setup-hook  'set-gui-style)))
+  (add-hook 'emacs-startup-hook 'set-tui-style))
+
+;; This is probably overkill, but harmless. Solves an issue where vertical bar
+;; character was being unpredictably reset.
+(add-hook 'server-switch-hook 'set-style)
+(add-hook 'window-setup-hook  'set-style)
 
 
 (setq-default display-line-numbers-current-absolute nil)
