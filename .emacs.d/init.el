@@ -54,7 +54,7 @@
 ;; https://www.emacswiki.org/emacs/CommentingCode
 (defun uncomment-region (beg end)
   "Like `comment-region' invoked with a C-u prefix arg."
-  (interactive "r")
+  (interactive)
   (comment-region beg end -1))
 
 (defalias 'evil-org-link-open
@@ -74,7 +74,6 @@
   :config
   (evil-mode 1)
   (evil-set-initial-state 'shell-mode evil-default-state)
-  ;; (evil-set-initial-state 'man-mode evil-default-state)
   (define-key evil-motion-state-map " " 'evil-window-map)
   (define-key evil-visual-state-map " " 'evil-window-map)
   (define-key evil-window-map (kbd "TAB") 'previous-buffer)
@@ -176,7 +175,6 @@
   (set-face-background 'default "unspecified-bg" (selected-frame)))
 
 (defun set-gui-style ()
-  (set-frame-font "Fira Code 12" nil t)
   (set-frame-parameter (selected-frame) 'alpha '(97 . 95)))
 
 (defun set-style ()
@@ -193,6 +191,8 @@
 (add-hook 'server-switch-hook 'set-style)
 (add-hook 'window-setup-hook  'set-style)
 
+
+(add-to-list 'default-frame-alist '(font . "Fira Code 12"))
 
 (setq-default display-line-numbers-current-absolute nil)
 (setq-default display-line-numbers-type 'relative)
@@ -231,6 +231,7 @@
           (lambda ()
             (setq gc-cons-threshold 10000000))) ;; 1MB (default is 80KB)
 
+(setq initial-scratch-message nil)
 
 (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
 (read-abbrev-file)
