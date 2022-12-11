@@ -35,6 +35,7 @@
     proof-general
     company-coq
     doom-modeline
+    all-the-icons ;; This is related to doom-modeline
     ))
 
 ;; Update with M-x list-packages U x
@@ -144,10 +145,20 @@
   (add-hook 'org-mode-hook 'evil-org-mode)
   (define-key evil-normal-state-map (kbd "RET") 'evil-org-link-open))
 
+(use-package all-the-icons
+  :ensure t
+  :config
+  ;; TODO: This is an installation task, not config
+  (all-the-icons-install-fonts))
+
 (use-package doom-modeline
   :ensure t
+  :after all-the-icons
   :init
-  (doom-modeline-mode 1))
+  (doom-modeline-mode 1)
+  ;; Should have no effect on TUI
+  (setq doom-modeline-icon t)
+  (setq doom-modeline-modal-icon t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
