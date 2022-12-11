@@ -42,7 +42,7 @@ set_term_color() {
 
 alias emacs='TERM=xterm-emacs emacsclient --alternate-editor="" -nw'
 alias gemacs='emacsclient -c -n --alternate-editor=""'
-alias killemacs='emacsclient -e "(kill-emacs)"'
+alias kill-emacs='emacsclient -e "(kill-emacs)"'
 
 alias lsa='ls -I "*.acl2" -I "*.cert" -I "*.cert.out" -I "*.lx64fsl" -I "*.lx86cl64" -I "*.port"'
 
