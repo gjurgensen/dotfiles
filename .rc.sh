@@ -87,6 +87,11 @@ elif [ -n "$(which vim)" ]; then
   export MANPAGER='vim -M +MANPAGER -';
 fi
 
+# Some systems (notably WSL) have an unreadable default for ls directory color.
+fix_ls_colors(){
+    export LS_COLORS="${LS_COLORS}:ow=01;38"
+}
+
 export TERM=xterm-256color
 
 rc_local="${HOME}/.rc_local.sh"
