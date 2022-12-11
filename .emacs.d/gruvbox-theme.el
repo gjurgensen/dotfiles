@@ -60,6 +60,8 @@
 
    ;; Org Mode
    (org-date                     (:underline t :foreground gruv-blue))
+   (org-document-title           (:foreground gruv-fg))
+   (org-document-info            (:foreground gruv-fg))
 
    ;; Rainbow Delimiters
    (rainbow-delimiters-depth-1-face    (:foreground gruv-green))
