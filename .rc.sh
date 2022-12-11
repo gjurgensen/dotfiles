@@ -277,6 +277,12 @@ set_tmux_name(){
   fi
 }
 
+# On some systems (notably WSL), the default style of directories is very
+# diffuclt on the eyes.
+fix_ls_colors(){
+    export LS_COLORS="$LS_COLORS:ow=01;36"
+}
+
 export TERM=xterm-256color
 
 rc_local="${HOME}/.rc_local.sh"
