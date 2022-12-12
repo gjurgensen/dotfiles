@@ -32,6 +32,9 @@
    (insert "$ACL2")
    (evil-newline)))
 
+(defun tramp-filename-to-local (filename)
+  (car (last (split-string filename ":"))))
+
 (defun acl2-load-all-elsewhere ()
   (interactive)
   (save-window
@@ -40,7 +43,7 @@
    (insert
     (format "(acl2::ld \"%s\")"
             ;; https://stackoverflow.com/a/455500/11126632
-            (buffer-file-name (nth 1 (buffer-list)))))
+            (tramp-filename-to-local (buffer-file-name (nth 1 (buffer-list))))))
    (evil-newline)))
 
 (defun submit-theorem-elsewhere ()
