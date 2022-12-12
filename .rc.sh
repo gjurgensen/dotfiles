@@ -92,6 +92,13 @@ fix_ls_colors(){
     export LS_COLORS="${LS_COLORS}:ow=01;38"
 }
 
+set_tmux_name(){
+  if [ -n "$TMUX" ]; then
+    echo "$(tmux display-message -p '#W')";
+    tmux rename-window "$1"
+  fi
+}
+
 export TERM=xterm-256color
 
 rc_local="${HOME}/.rc_local.sh"
