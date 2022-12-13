@@ -37,5 +37,6 @@ tic -o ~/.terminfo xterm-256color.terminfo
 tic -x -o ~/.terminfo xterm-emacs.terminfo
 
 stow --adopt .
+git reset --hard HEAD
 
 echo "Install finished; restart shell to complete install."
