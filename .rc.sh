@@ -51,6 +51,9 @@ alias lsi='ls -I "*.acl2" -I "*.cert" -I "*.cert.out" -I "*.lx64fsl" -I "*.lx86c
 alias view='vim - -R --not-a-term'
 
 alias open='xdg-open'
+sopen() {
+    open "$@" > /dev/null 2> /dev/null
+}
 
 alias sup='sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y'
 
