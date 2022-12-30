@@ -82,6 +82,12 @@ svndiff(){
   svn diff $@ --git | view
 }
 
+svnlog(){
+  svn log -l 20 | view
+}
+
+alias grepr='grep -HR'
+
 if [ -n "$(which nvim)" ]; then
   export EDITOR=nvim;
   export MANPAGER='nvim +Man!';
