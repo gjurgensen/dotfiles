@@ -1,13 +1,75 @@
-;; Dependencies:
-;; 1. smartparens (sp-copy-sexp)
+;;; ACL2-related config.
 
-;; courtesy of Eric Smith, modified for evil-mode compatibility
-(defalias 'strip-encloser
-  (read-kbd-macro
-   "\\ C-M-k \\ C-M-u \\ C-y \\ C-M-k \\ C-M-b \\ C-M-q"))
+;; Required to due use of `sp-copy-sexp`
+(require 'smartparens)
 
-(fset 'localize
-      (kmacro-lambda-form [?% ?a ?\) escape ?h ?% ?i ?\( ?l ?o ?c ?a ?l ?  escape ?l ?\\] 0 "%d"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; Load emacs-acl2.el
+
+(use-package exec-path-from-shell
+  :config
+  (add-to-list 'exec-path-from-shell-variables "ACL2_ROOT")
+  (exec-path-from-shell-initialize))
+
+(defvar acl2-skip-shell nil)
+(setq acl2-skip-shell t)
+(eload "${ACL2_ROOT}/books/emacs/emacs-acl2.el")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; Abbreviations
+
+(define-skeleton skel-dx "" nil
+  "(declare (xargs " _ "))")
+
+(define-skeleton skel-dxg "" nil
+  "(declare (xargs :guard " _ "))")
+
+(define-skeleton skel-dxm "" nil
+  "(declare (xargs :measure " _ "))")
+
+(define-skeleton skel-hg "" nil
+  ":hints ((\"Goal\" " _ "))")
+
+(define-skeleton skel-hid "" nil
+  ":hints ((\"Goal\" :in-theory (disable " _ ")))")
+
+(define-skeleton skel-hie "" nil
+  ":hints ((\"Goal\" :in-theory (enable " _ ")))")
+
+(define-skeleton skel-hied "" nil
+  ":hints ((\"Goal\" :in-theory (e/d " _ ")))")
+
+(define-skeleton skel-hu "" nil
+  ":hints ((\"Goal\" :use ((" _ "))))")
+
+(define-skeleton skel-hui "" nil
+  ":hints ((\"Goal\" :use ((:instance " _ "))))")
+
+(define-abbrev-table 'acl2-abbrev-table
+  '(("dx"   "" skel-dx 0)
+    ("dxg"  "" skel-dxg 0)
+    ("dxm"  "" skel-dxm 0)
+    ("hg"   "" skel-hg 0)
+    ("hid"  "" skel-hdi 0)
+    ("hie"  "" skel-hie 0)
+    ("hied" "" skel-hied 0)
+    ("hu"   "" skel-hu 0)
+    ("hui"  "" skel-hui 0)
+    ("agj"  ";;; Author: Grant Jurgensen (grant@kestrel.edu)" nil 0)
+    ("dxgt" "(declare (xargs :guard t))" nil 0)
+    ))
+
+(add-hook 'lisp-mode-hook
+            (lambda () (setq local-abbrev-table acl2-abbrev-table)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; Extensions and modifications to the standard Emacs file
 
 (fset 'evil-newline
       (kmacro-lambda-form [?\\ ?\C-m] 0 "%d"))
@@ -98,3 +160,16 @@
 (define-key ctl-t-keymap "\C-d" 'acl2-submit-doc)
 ;; Overwrites enter-theorem-elsewhere
 (define-key ctl-t-keymap "\C-e" 'submit-theorem-elsewhere)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; Misc
+
+;; Courtesy of Eric Smith, modified for evil-mode compatibility
+(defalias 'strip-encloser
+  (read-kbd-macro
+   "\\ C-M-k \\ C-M-u \\ C-y \\ C-M-k \\ C-M-b \\ C-M-q"))
+
+(fset 'localize
+      (kmacro-lambda-form [?% ?a ?\) escape ?h ?% ?i ?\( ?l ?o ?c ?a ?l ?  escape ?l ?\\] 0 "%d"))

@@ -1,68 +1,52 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; GC
 
 ;; https://blog.d46.us/advanced-emacs-startup/
 ;; Don't GC during startup
 (setq gc-cons-threshold most-positive-fixnum)
 
+(defun emacs-startup-gc-and-report ()
+  (setq gc-cons-threshold 10000000) ;; 1MB (default is 80KB)
+  (message "Emacs ready in %s with %d garbage collections."
+           (format "%.4f seconds"
+                   (float-time
+                    (time-subtract after-init-time before-init-time)))
+           gcs-done))
+(add-hook 'emacs-startup-hook 'emacs-startup-gc-and-report)
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; Custom file
 
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; MELPA
+;;; Load utilities
+
+(load "~/.emacs.d/core/utils.el")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; MELPA
 
 ;; Add MELPA package archives
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
 
+;; Manually update packages with M-x list-packages U x (should be done
+;; automatically by auto-package-update).
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Install packages
-
-(defconst *pkgs*
-  '(evil
-    evil-collection
-    evil-org
-    use-package
-    exec-path-from-shell
-    autothemer
-    smartparens
-    rainbow-delimiters
-    xclip
-    proof-general
-    company-coq
-    doom-modeline
-    all-the-icons ;; This is related to doom-modeline
-    ))
-
-;; Update with M-x list-packages U x
-(defun install-packages ()
-  (interactive)
-  (package-refresh-contents)
-  (dolist (pkg-name *pkgs*)
-    (package-install pkg-name)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun previous-buffer ()
-  (interactive)
-  (switch-to-buffer (other-buffer (current-buffer) 1)))
-
-;; https://www.emacswiki.org/emacs/CommentingCode
-(defun uncomment-region (beg end)
-  "Like `comment-region' invoked with a C-u prefix arg."
-  (interactive)
-  (comment-region beg end -1))
-
-(defalias 'evil-org-link-open
-  (read-kbd-macro "\\ C-c C-o"))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; Configure packages
+;; Packages
 
 (use-package evil
   :ensure t
@@ -76,14 +60,7 @@
   (evil-set-initial-state 'shell-mode evil-default-state)
   (define-key evil-motion-state-map " " 'evil-window-map)
   (define-key evil-visual-state-map " " 'evil-window-map)
-  (define-key evil-window-map (kbd "TAB") 'previous-buffer)
-  )
-
-;; (use-package man
-;;   :config
-;;   ;; (define-key man-mode-map " " nil)
-;;   ;; (setq man-notify-method 'pushy)
-;;   )
+  (define-key evil-window-map (kbd "TAB") 'toggle-prev-buffer))
 
 (use-package evil-collection
   :after evil
@@ -91,18 +68,43 @@
   :config
   (evil-collection-init))
 
-(use-package exec-path-from-shell
+(use-package evil-org
+  :ensure t
+  :after org
+  :init
+  (defalias 'evil-org-link-open
+    (read-kbd-macro "\\ C-c C-o"))
   :config
-  (add-to-list 'exec-path-from-shell-variables "ACL2_ROOT")
-  (exec-path-from-shell-initialize))
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys)
+  (add-hook 'org-mode-hook 'evil-org-mode)
+  (define-key evil-normal-state-map (kbd "RET") 'evil-org-link-open))
+
+(use-package treemacs-evil
+  :after (treemacs evil)
+  :ensure t)
+
 
 (use-package tramp
   :config
-  ;; (setq tramp-default-method "sshx")
-  ;; (setenv "SHELL" "/bin/sh")
-  )
+  (setenv "SHELL" "/bin/bash"))
 
-(use-package smartparens)
+
+(use-package org
+  :ensure t
+  :init
+  (setq org-image-actual-width nil))
+
+
+(use-package abbrev-mode
+  :init
+  (setq-default abbrev-mode t)
+  (add-hook 'coq-mode-hook (lambda () (setq abbrev-mode nil)))
+  :config
+  (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
+  (read-abbrev-file "~/.emacs.d/abbrev_defs")
+  (setq save-abbrevs 'silently))
+
 
 (use-package autothemer
   :ensure t
@@ -110,45 +112,44 @@
   (load "${HOME}/.emacs.d/gruvbox-theme.el")
   (load-theme 'gruvbox t))
 
+
+(use-package auto-package-update
+  :ensure t
+  :config
+  (setq auto-package-update-delete-old-versions t)
+  (setq auto-package-update-hide-results t)
+  (auto-package-update-maybe))
+
+
+(use-package smartparens
+  :ensure t)
+
 (use-package rainbow-delimiters
+  :ensure t
   :config
   (add-hook 'lisp-mode-hook #'rainbow-delimiters-mode)
   (add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode))
 
+
 (use-package xclip
-  ;; :ensure t
+  :ensure t
   :config
-  ;; (xclip-mode 1)
   ;; https://stackoverflow.com/questions/37214940/require-package-only-if-available
   (when (executable-find "xclip")
     (xclip-mode 1)))
 
+
 (use-package proof-general
+  :ensure t
   :config
   (setq proof-splash-enable nil))
 
 (use-package company-coq
+  :ensure t
   :config
   (add-hook 'coq-mode-hook #'company-coq-mode)
   (add-hook 'coq-mode-hook (lambda () (prettify-symbols-mode))))
 
-(use-package org)
-
-(use-package evil-org
-  :ensure t
-  :after org
-  ;; :hook (org-mode . (lambda () evil-org-mode))
-  :config
-  (require 'evil-org-agenda)
-  (evil-org-agenda-set-keys)
-  (add-hook 'org-mode-hook 'evil-org-mode)
-  (define-key evil-normal-state-map (kbd "RET") 'evil-org-link-open))
-
-(use-package all-the-icons
-  :ensure t
-  :config
-  ;; TODO: This is an installation task, not config
-  (all-the-icons-install-fonts))
 
 (use-package doom-modeline
   :ensure t
@@ -159,9 +160,33 @@
   (setq doom-modeline-icon t)
   (setq doom-modeline-modal-icon t))
 
+;; May need to run `(all-the-icons-install-fonts)` on install?
+(use-package all-the-icons
+  :ensure t)
+
+
+(use-package treemacs
+  :ensure t
+  :defer t)
+
+
+(use-package flycheck
+  :ensure t
+  :after exec-path-from-shell
+  :config
+  ; (global-flycheck-mode)
+  )
+
+
+(use-package markdown-mode
+  :ensure t
+  :mode ("README\\.md\\'" . gm-mode)
+  :init (setq markdown-command "multimarkdown"))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Global configuration
+;;; Global configuration
 
 (defun set-tui-vertical-border ()
   ;; Thicker version:
@@ -192,6 +217,9 @@
 (add-hook 'window-setup-hook  'set-style)
 
 
+;; TODO: restrict to text modes?
+(global-visual-line-mode t)
+
 (add-to-list 'default-frame-alist '(font . "Fira Code 12"))
 
 (setq-default display-line-numbers-current-absolute nil)
@@ -217,40 +245,16 @@
 (setq-default indent-tabs-mode nil)
 (global-whitespace-mode)
 
-;; Report startup time
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (message "Emacs ready in %s with %d garbage collections."
-                     (format "%.4f seconds"
-                             (float-time
-                              (time-subtract after-init-time before-init-time)))
-                     gcs-done)))
-
-;; Custom GC threshold
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (setq gc-cons-threshold 10000000))) ;; 1MB (default is 80KB)
-
 (setq initial-scratch-message nil)
-
-(setq abbrev-file-name "~/.emacs.d/abbrev_defs")
-(read-abbrev-file)
-(setq-default abbrev-mode t)
-(add-hook 'coq-mode-hook (lambda () (setq abbrev-mode nil)))
-(setq save-abbrevs 'silent)
 
 (setq-default show-trailing-whitespace t)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 (setq vc-follow-symlinks t)
 
-(defun wload (file)
-  (or (load file t)
-      (progn (warn "Failed to load file: %s" file)
-             nil)))
 
-;; TODO, make sure exec-path-from-shell is already loaded
-(defvar acl2-skip-shell nil)
-(setq acl2-skip-shell t)
-(if (wload "${ACL2_ROOT}/books/emacs/emacs-acl2.el")
-    (wload "${HOME}/.emacs.d/core/acl2-extensions.el"))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; Loads
+
+(load "~/.emacs.d/core/acl2.el")
