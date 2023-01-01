@@ -60,7 +60,9 @@
   (evil-set-initial-state 'shell-mode evil-default-state)
   (define-key evil-motion-state-map " " 'evil-window-map)
   (define-key evil-visual-state-map " " 'evil-window-map)
-  (define-key evil-window-map (kbd "TAB") 'toggle-prev-buffer))
+  (define-key evil-window-map (kbd "TAB") 'toggle-prev-buffer)
+  (define-key evil-visual-state-map "u" 'downcase-region-smart)
+  (define-key evil-visual-state-map "U" 'upcase-region-smart))
 
 (use-package evil-collection
   :after evil

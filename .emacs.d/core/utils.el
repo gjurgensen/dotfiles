@@ -22,3 +22,34 @@
   (or (load file t)
       (progn (error "Failed to load file: %s" file)
              nil)))
+
+;; https://emacs.stackexchange.com/questions/17306/upcase-whole-buffer-but-ignore-quoted-strings
+(defun downcase-region-smart (beg end)
+  "Downcase region, except for strings."
+  (interactive "r")
+  (let* ((old-syntax-table (syntax-table))
+         (new-syntax-table (make-syntax-table old-syntax-table)))
+    (modify-syntax-entry ?\" "\"   " new-syntax-table)
+    (with-syntax-table new-syntax-table
+      (save-excursion
+        (goto-char beg)
+        (while (< (point) end)
+          (let ((beg (point)))
+            (parse-partial-sexp (point) end nil nil nil 'syntax-table)
+            (downcase-region beg (point))
+            (parse-partial-sexp (point) end nil nil nil 'syntax-table)))))))
+
+(defun upcase-region-smart (beg end)
+  "Upcase region, except for strings."
+  (interactive "r")
+  (let* ((old-syntax-table (syntax-table))
+         (new-syntax-table (make-syntax-table old-syntax-table)))
+    (modify-syntax-entry ?\" "\"   " new-syntax-table)
+    (with-syntax-table new-syntax-table
+      (save-excursion
+        (goto-char beg)
+        (while (< (point) end)
+          (let ((beg (point)))
+            (parse-partial-sexp (point) end nil nil nil 'syntax-table)
+            (upcase-region beg (point))
+            (parse-partial-sexp (point) end nil nil nil 'syntax-table)))))))
