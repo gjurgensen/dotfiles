@@ -25,7 +25,7 @@
 
 ;; https://emacs.stackexchange.com/questions/17306/upcase-whole-buffer-but-ignore-quoted-strings
 (defun downcase-region-smart (beg end)
-  "Downcase region, except for strings."
+  "Downcase region, except for strings and similar case-sensitive subregions."
   (interactive "r")
   (let* ((old-syntax-table (syntax-table))
          (new-syntax-table (make-syntax-table old-syntax-table)))
@@ -40,7 +40,7 @@
             (parse-partial-sexp (point) end nil nil nil 'syntax-table)))))))
 
 (defun upcase-region-smart (beg end)
-  "Upcase region, except for strings."
+  "Upcase region, except for strings and similar case-sensitive subregions."
   (interactive "r")
   (let* ((old-syntax-table (syntax-table))
          (new-syntax-table (make-syntax-table old-syntax-table)))
