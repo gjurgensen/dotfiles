@@ -94,6 +94,9 @@
 
 (use-package org
   :ensure t
+  :config
+  (define-skeleton org-header "" nil
+    "#+title: " _ "\n#+author: Grant Jurgensen")
   :init
   (setq org-image-actual-width nil))
 
@@ -111,7 +114,7 @@
 (use-package autothemer
   :ensure t
   :config
-  (load "${HOME}/.emacs.d/gruvbox-theme.el")
+  (load "~/.emacs.d/gruvbox-theme.el")
   (load-theme 'gruvbox t))
 
 
@@ -136,9 +139,8 @@
 (use-package xclip
   :ensure t
   :config
-  ;; https://stackoverflow.com/questions/37214940/require-package-only-if-available
-  (when (executable-find "xclip")
-    (xclip-mode 1)))
+  (if (executable-find "xclip")
+      (xclip-mode 1)))
 
 
 (use-package proof-general
@@ -158,11 +160,10 @@
   :after all-the-icons
   :init
   (doom-modeline-mode 1)
-  ;; Should have no effect on TUI
   (setq doom-modeline-icon t)
   (setq doom-modeline-modal-icon t))
 
-;; May need to run `(all-the-icons-install-fonts)` on install?
+;; May need to run `(all-the-icons-install-fonts)` on initial install?
 (use-package all-the-icons
   :ensure t)
 
