@@ -40,6 +40,19 @@ set_term_color() {
   term_color
 }
 
+unemacs(){
+  local ARG
+  if [[ -z "$1" ]]; then
+    ARG="."
+  else
+    ARG="$1"
+  fi
+
+  rm -if $ARG/*~
+  rm -if $ARG/*#*#*
+  # rm -if .#*
+}
+
 alias emacs='TERM=xterm-emacs emacsclient --alternate-editor="" -nw'
 alias gemacs='emacsclient -c -n --alternate-editor=""'
 alias kill-emacs='emacsclient -e "(kill-emacs)"'
@@ -50,9 +63,18 @@ alias lsi='ls -I "*.acl2" -I "*.cert" -I "*.cert.out" -I "*.lx64fsl" -I "*.lx86c
 
 alias view='vim - -R --not-a-term'
 
-alias open='xdg-open'
-sopen() {
-    open "$@" > /dev/null 2> /dev/null
+# Likely shadows bin `open`, alias for `xdg-open`
+open(){
+  local ARG
+  if [[ -z "$1" ]]; then
+    ARG="."
+  else
+    ARG="$1"
+  fi
+  xdg-open "$ARG"
+}
+sopen(){
+  open "$@" > /dev/null 2> /dev/null
 }
 
 alias sup='sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y'
@@ -86,7 +108,16 @@ svnlog(){
   svn log -l 20 | view
 }
 
-alias grepr='grep -HR'
+alias grepr='grep --color=always -HR'
+
+# https://askubuntu.com/questions/359492/create-a-shortcut-for-url
+url_shortcut(){
+  if [[ -z "$1" ]]; then
+    echo "Expected url argument" >&2
+  else
+    echo "<meta http-equiv=\"refresh\" content=\"0;url=$1\">"
+  fi
+}
 
 if [ -n "$(which nvim)" ]; then
   export EDITOR=nvim;
@@ -95,6 +126,14 @@ elif [ -n "$(which vim)" ]; then
   export EDITOR=vim;
   export MANPAGER='vim -M +MANPAGER -';
 fi
+
+nvim() {
+  if [[ -n "$NVIM" ]]; then
+    /usr/bin/nvim --server "$NVIM" --remote-send "<ESC>:e $1<CR>"
+  else
+    /usr/bin/nvim $@
+  fi
+}
 
 # Some systems (notably WSL) have an unreadable default for ls directory color.
 fix_ls_colors(){

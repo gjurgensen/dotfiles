@@ -1,7 +1,13 @@
 #!/usr/bin/bash
 
 sudo apt update
-sudo apt install zsh stow vim neovim tmux emacs git curl unzip -y
+# sudo apt install zsh stow vim neovim tmux emacs git curl unzip -y
+sudo apt install zsh stow vim tmux emacs git curl unzip -y
+# In case an old version of nvim is lingering
+sudo apt autoremove -y
+
+curl https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.deb > ~/Downloads/nvim-linux64.deb
+sudo apt install ~/Downloads/nvim-linux64.deb
 
 # install zsh
 export CHSH=yes
@@ -40,3 +46,5 @@ stow --adopt .
 git reset --hard HEAD
 
 echo "Install finished; restart shell to complete install."
+
+

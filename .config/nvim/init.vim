@@ -17,6 +17,12 @@ Plugin 'kien/rainbow_parentheses.vim'
 
 Plugin 'preservim/nerdtree'
 
+Plugin 'dbeniamine/cheat.sh-vim'
+
+Plugin 'vim-scripts/VisIncr'
+
+" Plugin 'neoclide/coc.nvim'
+
 call vundle#end()
 filetype plugin indent on
 
@@ -105,3 +111,16 @@ function! <SID>StripTrailingWhitespaces()
 endfun
 autocmd BufWritePre,FileWritePre,FileAppendPre,FilterWritePre *
   \ :call <SID>StripTrailingWhitespaces()
+
+
+function! Zsh()
+  execute "term"
+  execute "f zsh"
+endfunction
+command Zsh :call Zsh()
+
+function! Sc()
+    execute "term"
+    execute "f sc"
+endfunction
+command Sc :call Sc()
