@@ -129,10 +129,17 @@ fi
 
 nvim() {
   if [[ -n "$NVIM" ]]; then
-    command nvim --server "$NVIM" --remote-send "<ESC>:e $1<CR>"
+    command nvim --server "$NVIM" --remote-send "<ESC>:e $(realpath $0)<CR>"
   else
     command nvim $@
   fi
+}
+
+cd() {
+  if [[ -n "$NVIM" ]]; then
+    command nvim --server "$NVIM" --remote-send "<ESC>:cd $(realpath $0)<CR>i"
+  fi
+  builtin cd $@
 }
 
 # Some systems (notably WSL) have an unreadable default for ls directory color.
