@@ -68,6 +68,9 @@ set smarttab
 set tabstop=4
 set shiftwidth=4
 
+autocmd BufNewFile,BufRead *.c,*.h setlocal tabstop=2 shiftwidth=2 smartindent autoindent
+autocmd BufNewFile,BufRead *.sh setlocal tabstop=2 shiftwidth=2
+
 " search options
 set hlsearch
 set incsearch
@@ -124,3 +127,5 @@ function! Sc()
     execute "f sc"
 endfunction
 command Sc :call Sc()
+
+autocmd BufNewFile,BufRead *.idl4,*.camkes set syntax=c
