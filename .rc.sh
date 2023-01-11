@@ -129,9 +129,9 @@ fi
 
 nvim() {
   if [[ -n "$NVIM" ]]; then
-    /usr/bin/nvim --server "$NVIM" --remote-send "<ESC>:e $1<CR>"
+    command nvim --server "$NVIM" --remote-send "<ESC>:e $1<CR>"
   else
-    /usr/bin/nvim $@
+    command nvim $@
   fi
 }
 
