@@ -186,6 +186,21 @@
   :mode ("README\\.md\\'" . gm-mode)
   :init (setq markdown-command "multimarkdown"))
 
+(use-package eyebrowse
+  :ensure t
+  :after evil
+  :init
+  (define-key evil-window-map (kbd "0") 'eyebrowse-switch-to-window-config-0)
+  (define-key evil-window-map (kbd "1") 'eyebrowse-switch-to-window-config-1)
+  (define-key evil-window-map (kbd "2") 'eyebrowse-switch-to-window-config-2)
+  (define-key evil-window-map (kbd "3") 'eyebrowse-switch-to-window-config-3)
+  (define-key evil-window-map (kbd "4") 'eyebrowse-switch-to-window-config-4)
+  (define-key evil-window-map (kbd "5") 'eyebrowse-switch-to-window-config-5)
+  (define-key evil-window-map (kbd "6") 'eyebrowse-switch-to-window-config-6)
+  (define-key evil-window-map (kbd "7") 'eyebrowse-switch-to-window-config-7)
+  (define-key evil-window-map (kbd "8") 'eyebrowse-switch-to-window-config-8)
+  (define-key evil-window-map (kbd "9") 'eyebrowse-switch-to-window-config-9)
+  :config (eyebrowse-mode t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -254,6 +269,50 @@
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 (setq vc-follow-symlinks t)
+
+;; seL4 stuff
+(setq auto-mode-alist
+      (append '((".*\\.camkes\\'" . c-mode)
+                (".*\\.idl4\\'" . c-mode))
+              auto-mode-alist))
+
+;; term stuff
+;; server-name doesn't seem to be set until startup
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (when (daemonp)
+              (setenv "EMACS_SERVER" server-name))))
+
+;; (custom-set-variables
+;;  '(initial-frame-alist (quote ((fullscreen . maximized)))))
+
+;; https://www.emacswiki.org/emacs/FullScreen#h5o-21
+(defun fullscreen ()
+  "Enable full screen on X11"
+  (interactive)
+  (when (eq window-system 'x)
+    (set-frame-parameter nil 'fullscreen 'fullboth)))
+
+(defun disable-fullscreen ()
+  "Disable full screen on X11"
+  (interactive)
+  (when (eq window-system 'x)
+    (set-frame-parameter nil 'fullscreen nil)))
+
+(defun toggle-fullscreen ()
+  "Toggle full screen on X11"
+  (interactive)
+  (when (eq window-system 'x)
+    (set-frame-parameter
+     nil 'fullscreen
+     (if (not (frame-parameter nil 'fullscreen))
+         'fullboth
+       nil))))
+
+;; TODO: add to gui setup?
+(add-hook 'emacs-startup-hook 'fullscreen)
+(add-hook 'server-switch-hook 'fullscreen)
+(add-hook 'window-setup-hook  'fullscreen)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
