@@ -53,8 +53,24 @@ unemacs(){
   # rm -if .#*
 }
 
-alias emacs='TERM=xterm-emacs emacsclient --alternate-editor="" -nw'
-alias gemacs='emacsclient -c -n --alternate-editor=""'
+# alias emacs='TERM=xterm-emacs emacsclient --alternate-editor="" -nw'
+emacs() {
+  if [[ -n "$EMACS_SERVER" ]]; then
+    emacsclient -e "(find-file \"$(realpath $1)\")" -s "$EMACS_SERVER" > /dev/null
+  else
+    TERM=xterm-emacs emacsclient --alternate-editor="" -nw $@
+  fi
+}
+
+# alias gemacs='emacsclient -c -n --alternate-editor=""'
+gemacs() {
+  if [[ -n "$EMACS_SERVER" ]]; then
+    emacsclient -e "(find-file \"$(realpath $1)\")" -s "$EMACS_SERVER" > /dev/null
+  else
+    emacsclient -c -n --alternate-editor="" $@
+  fi
+}
+
 alias kill-emacs='emacsclient -e "(kill-emacs)"'
 
 alias lsa='ls -I "*.acl2" -I "*.cert" -I "*.cert.out" -I "*.lx64fsl" -I "*.lx86cl64" -I "*.port"'
@@ -138,6 +154,8 @@ nvim() {
 cd() {
   if [[ -n "$NVIM" ]]; then
     command nvim --server "$NVIM" --remote-send "<ESC>:cd $(realpath $0)<CR>i"
+  elif [[ -n "$EMACS_SERVER" ]]; then
+    emacsclient -e "(cd \"$(realpath $1)\")" -s "$EMACS_SERVER" > /dev/null
   fi
   builtin cd $@
 }
