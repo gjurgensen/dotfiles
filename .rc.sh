@@ -53,7 +53,8 @@ unemacs(){
   # rm -if .#*
 }
 
-# alias emacs='TERM=xterm-emacs emacsclient --alternate-editor="" -nw'
+alias kill-emacs='emacsclient -e "(kill-emacs)"'
+
 emacs() {
   if [[ -n "$EMACS_SERVER" ]]; then
     emacsclient -e "(find-file \"$(realpath $1)\")" -s "$EMACS_SERVER" > /dev/null
@@ -62,7 +63,6 @@ emacs() {
   fi
 }
 
-# alias gemacs='emacsclient -c -n --alternate-editor=""'
 gemacs() {
   if [[ -n "$EMACS_SERVER" ]]; then
     emacsclient -e "(find-file \"$(realpath $1)\")" -s "$EMACS_SERVER" > /dev/null
@@ -71,7 +71,42 @@ gemacs() {
   fi
 }
 
-alias kill-emacs='emacsclient -e "(kill-emacs)"'
+nvim() {
+  if [[ -n "$NVIM" ]]; then
+    command nvim --server "$NVIM" --remote-send "<ESC>:e $(realpath $1)<CR>"
+  else
+    command nvim $@
+  fi
+}
+
+if [ -n "$(which nvim)" ]; then
+  export EDITOR=nvim;
+  export MANPAGER='nvim +Man!';
+elif [ -n "$(which vim)" ]; then
+  export EDITOR=vim;
+  export MANPAGER='vim -M +MANPAGER -';
+elif [-n "$(which emacs)" ]; then
+  export EDITOR=emacs
+fi
+
+e() {
+  if [[ -n "$NVIM" ]]; then
+    command nvim --server "$NVIM" --remote-send "<ESC>:e $(realpath $1)<CR>"
+  elif [[ -n "$EMACS_SERVER" ]]; then
+    emacsclient -e "(find-file \"$(realpath $1)\")" -s "$EMACS_SERVER" > /dev/null
+  else
+    $EDITOR $@
+  fi
+}
+
+cd() {
+  if [[ -n "$NVIM" ]]; then
+    command nvim --server "$NVIM" --remote-send "<ESC>:cd $(realpath $1)<CR>i"
+  elif [[ -n "$EMACS_SERVER" ]]; then
+    emacsclient -e "(cd \"$(realpath $1)\")" -s "$EMACS_SERVER" > /dev/null
+  fi
+  builtin cd $@
+}
 
 alias lsa='ls -I "*.acl2" -I "*.cert" -I "*.cert.out" -I "*.lx64fsl" -I "*.lx86cl64" -I "*.port"'
 
@@ -133,31 +168,6 @@ url_shortcut(){
   else
     echo "<meta http-equiv=\"refresh\" content=\"0;url=$1\">"
   fi
-}
-
-if [ -n "$(which nvim)" ]; then
-  export EDITOR=nvim;
-  export MANPAGER='nvim +Man!';
-elif [ -n "$(which vim)" ]; then
-  export EDITOR=vim;
-  export MANPAGER='vim -M +MANPAGER -';
-fi
-
-nvim() {
-  if [[ -n "$NVIM" ]]; then
-    command nvim --server "$NVIM" --remote-send "<ESC>:e $(realpath $0)<CR>"
-  else
-    command nvim $@
-  fi
-}
-
-cd() {
-  if [[ -n "$NVIM" ]]; then
-    command nvim --server "$NVIM" --remote-send "<ESC>:cd $(realpath $0)<CR>i"
-  elif [[ -n "$EMACS_SERVER" ]]; then
-    emacsclient -e "(cd \"$(realpath $1)\")" -s "$EMACS_SERVER" > /dev/null
-  fi
-  builtin cd $@
 }
 
 # Some systems (notably WSL) have an unreadable default for ls directory color.
