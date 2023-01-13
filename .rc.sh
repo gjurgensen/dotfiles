@@ -55,6 +55,38 @@ unemacs(){
 
 alias kill-emacs='emacsclient -e "(kill-emacs)"'
 
+_emacs_shell() {
+  local CMD
+  if [[ -n "$1" ]]; then
+    CMD="\"cd $(realpath $1)\""
+  fi
+
+  if [[ -n "$EMACS_SERVER" ]]; then
+    # emacsclient --socket-name=$EMACS_SERVER -e "(switch-to-buffer (new-shell-get-buffer-create))"
+    emacsclient --socket-name=$EMACS_SERVER -e "(new-shell-cmd $CMD)"
+  else
+    # TERM=xterm-emacs emacsclient --alternate-editor="" -nw -e "(switch-to-buffer (new-shell-get-buffer-create))"
+    TERM=xterm-emacs emacsclient --alternate-editor="" -nw -e "(new-shell-cmd $CMD)"
+  fi
+}
+alias emacs-shell='_emacs_shell'
+
+_gemacs_shell() {
+  local CMD
+  if [[ -n "$1" ]]; then
+    CMD="\"cd $(realpath $1)\""
+  fi
+
+  if [[ -n "$EMACS_SERVER" ]]; then
+    # emacsclient --socket-name=$EMACS_SERVER -n --alternate-editor="" -e "(switch-to-buffer (new-shell-get-buffer-create))"
+    emacsclient --socket-name=$EMACS_SERVER -n --alternate-editor="" -e "(new-shell-cmd $CMD)"
+  else
+    # emacsclient -c -n --alternate-editor="" -e "(switch-to-buffer (new-shell-get-buffer-create))"
+    emacsclient -c -n --alternate-editor="" -e "(new-shell-cmd $CMD)"
+  fi
+}
+alias gemacs-shell='_gemacs_shell'
+
 emacs() {
   if [[ -n "$EMACS_SERVER" ]]; then
     emacsclient -e "(find-file \"$(realpath $1)\")" -s "$EMACS_SERVER" > /dev/null
@@ -89,6 +121,16 @@ elif [-n "$(which emacs)" ]; then
   export EDITOR=emacs
 fi
 
+man() {
+  if [[ -n "$NVIM" ]]; then
+    command nvim --server "$NVIM" --remote-send "<ESC>:Man $1<CR>"
+  elif [[ -n "$EMACS_SERVER" ]]; then
+    emacsclient -e "(man \"$1\")" -s "$EMACS_SERVER" > /dev/null
+  else
+    command man $@
+  fi
+}
+
 e() {
   if [[ -n "$NVIM" ]]; then
     command nvim --server "$NVIM" --remote-send "<ESC>:e $(realpath $1)<CR>"
@@ -96,6 +138,31 @@ e() {
     emacsclient -e "(find-file \"$(realpath $1)\")" -s "$EMACS_SERVER" > /dev/null
   else
     $EDITOR $@
+  fi
+}
+
+less() {
+  if [[ -n "$NVIM" || -n "$EMACS_SERVER" ]]; then
+    cat
+  else
+    command less $@
+  fi
+}
+
+more() {
+  if [[ -n "$NVIM" || -n "$EMACS_SERVER" ]]; then
+    cat
+  else
+    command more $@
+  fi
+}
+
+# alias view='vim - -R --not-a-term'
+view() {
+  if [[ -n "$NVIM" || -n "$EMACS_SERVER" ]]; then
+    cat
+  else
+    command vim - -R --not-a-term $@
   fi
 }
 
@@ -111,8 +178,6 @@ cd() {
 alias lsa='ls -I "*.acl2" -I "*.cert" -I "*.cert.out" -I "*.lx64fsl" -I "*.lx86cl64" -I "*.port"'
 
 alias lsi='ls -I "*.acl2" -I "*.cert" -I "*.cert.out" -I "*.lx64fsl" -I "*.lx86cl64" -I "*.port" -I "*.o" -I "*.bak*" -I "*~"'
-
-alias view='vim - -R --not-a-term'
 
 # Likely shadows bin `open`, alias for `xdg-open`
 open(){
