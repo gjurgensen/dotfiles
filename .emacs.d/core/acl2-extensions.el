@@ -12,6 +12,8 @@
   (interactive)
   (save-window
    (shell)
+   (rename-buffer "acl2")
+   (set-shell-buffer)
    (insert "$ACL2")
    (evil-newline)))
 

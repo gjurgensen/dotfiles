@@ -46,18 +46,42 @@
 (define-skeleton skel-hui "" nil
   ":hints ((\"Goal\" :use ((:instance " _ "))))")
 
+(define-skeleton skel-ghg "" nil
+  ":guard-hints ((\"Goal\" " _ "))")
+
+(define-skeleton skel-ghid "" nil
+  ":guard-hints ((\"Goal\" :in-theory (disable " _ ")))")
+
+(define-skeleton skel-ghie "" nil
+  ":guard-hints ((\"Goal\" :in-theory (enable " _ ")))")
+
+(define-skeleton skel-ghied "" nil
+  ":guard-hints ((\"Goal\" :in-theory (e/d " _ ")))")
+
+(define-skeleton skel-ghu "" nil
+  ":guard-hints ((\"Goal\" :use ((" _ "))))")
+
+(define-skeleton skel-ghui "" nil
+  ":guard-hints ((\"Goal\" :use ((:instance " _ "))))")
+
 (define-abbrev-table 'acl2-abbrev-table
-  '(("dx"   "" skel-dx 0)
-    ("dxg"  "" skel-dxg 0)
-    ("dxm"  "" skel-dxm 0)
-    ("hg"   "" skel-hg 0)
-    ("hid"  "" skel-hdi 0)
-    ("hie"  "" skel-hie 0)
-    ("hied" "" skel-hied 0)
-    ("hu"   "" skel-hu 0)
-    ("hui"  "" skel-hui 0)
-    ("agj"  ";;; Author: Grant Jurgensen (grant@kestrel.edu)" nil 0)
-    ("dxgt" "(declare (xargs :guard t))" nil 0)
+  '(("dx"    "" skel-dx 0)
+    ("dxg"   "" skel-dxg 0)
+    ("dxm"   "" skel-dxm 0)
+    ("hg"    "" skel-hg 0)
+    ("hid"   "" skel-hdi 0)
+    ("hie"   "" skel-hie 0)
+    ("hied"  "" skel-hied 0)
+    ("hu"    "" skel-hu 0)
+    ("hui"   "" skel-hui 0)
+    ("ghg"   "" skel-ghg 0)
+    ("ghid"  "" skel-ghdi 0)
+    ("ghie"  "" skel-ghie 0)
+    ("ghied" "" skel-ghied 0)
+    ("ghu"   "" skel-ghu 0)
+    ("ghui"  "" skel-ghui 0)
+    ("agj"   ";;; Author: Grant Jurgensen (grant@kestrel.edu)" nil 0)
+    ("dxgt"  "(declare (xargs :guard t))" nil 0)
     ))
 
 (add-hook 'lisp-mode-hook
