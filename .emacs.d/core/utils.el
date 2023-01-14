@@ -1,5 +1,6 @@
 (provide 'utils)
 
+
 (defun toggle-prev-buffer ()
   "Switch to the previous buffer."
   (interactive)
@@ -71,6 +72,31 @@ Similar to `save-excursion'."
   (interactive)
   (cd "~/.emacs.d")
   (find-file "init.el"))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun buffer-name-list ()
+  (mapcar (function buffer-name) (buffer-list)))
+
+(defun fresh-buffer-name-aux (base-fmt number suffix-fmt$ blacklist)
+  (let ((name (format base-fmt (format suffix-fmt$ number))))
+    (if (member name blacklist)
+        (fresh-buffer-name-aux base-fmt (+ 1 number) suffix-fmt$ blacklist)
+      name)))
+
+;; base-fmt should have one `%s` for the potential suffix.
+;; suffix-fmt (if provided) should have one `%d` (or other number formatter) for
+;; the number.
+(defun fresh-buffer-name (base-fmt &optional suffix-fmt number-init)
+  (let ((blacklist (buffer-name-list))
+        (base (format base-fmt "")))
+    (if (member base blacklist)
+        (fresh-buffer-name-aux base-fmt
+                               (or number-init 0)
+                               (or suffix-fmt "-%d")
+                               blacklist)
+      base)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -207,30 +233,10 @@ in that direction and display the target buffer in said window."
      (evil-newline)
      buf)))
 
-(defun shell-cmd (&optional cmd buffer)
+(defun fresh-shell (&optional cmd base-fmt suffix-fmt number-init)
   (interactive)
   (select-window
    (get-buffer-window
-    (shell-cmd-get-buffer-create cmd buffer))))
-
-;;; TODO: More robust "fresh buffer name with prefix" generation
-(defvar latest-shell-number 0)
-(defun new-shell-cmd-get-buffer-create (&optional cmd)
-  "Start up a shell in a new buffer *shell-n*, where n is the
-least positive integer for which buffer *shell-n* does not
-currently exist and has never been created by this function."
-  (interactive)
-  (setq latest-shell-number (+ 1 latest-shell-number))
-  (while (get-buffer (concat "*shell-"
-                             (number-to-string latest-shell-number)
-                             "*"))
-    (setq latest-shell-number (+ 1 latest-shell-number)))
-  (shell-cmd-get-buffer-create cmd (concat "*shell-"
-                                           (number-to-string latest-shell-number)
-                                           "*")))
-
-(defun new-shell-cmd (&optional cmd)
-  (interactive)
-  (select-window
-   (get-buffer-window
-    (new-shell-cmd-get-buffer-create cmd))))
+    (shell-cmd-get-buffer-create
+     cmd
+     (fresh-buffer-name (or base-fmt "*shell%s*") suffix-fmt number-init)))))
