@@ -11,16 +11,8 @@
 (defun ashell ()
   (interactive)
   (save-window
-   (shell)
-   (rename-buffer "acl2")
+   (shell (fresh-buffer-name "acl2%s"))
    (set-shell-buffer)
-   (insert "$ACL2")
-   (evil-newline)))
-
-(defun new-ashell ()
-  (interactive)
-  (save-window
-   (new-shell)
    (insert "$ACL2")
    (evil-newline)))
 
