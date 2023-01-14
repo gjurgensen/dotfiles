@@ -62,11 +62,9 @@ _emacs_shell() {
   fi
 
   if [[ -n "$EMACS_SERVER" ]]; then
-    # emacsclient --socket-name=$EMACS_SERVER -e "(switch-to-buffer (new-shell-get-buffer-create))"
-    emacsclient --socket-name=$EMACS_SERVER -e "(new-shell-cmd $CMD)"
+    emacsclient --socket-name=$EMACS_SERVER -e "(fresh-shell $CMD)"
   else
-    # TERM=xterm-emacs emacsclient --alternate-editor="" -nw -e "(switch-to-buffer (new-shell-get-buffer-create))"
-    TERM=xterm-emacs emacsclient --alternate-editor="" -nw -e "(new-shell-cmd $CMD)"
+    TERM=xterm-emacs emacsclient --alternate-editor="" -nw -e "(fresh-shell $CMD)"
   fi
 }
 alias emacs-shell='_emacs_shell'
@@ -78,11 +76,9 @@ _gemacs_shell() {
   fi
 
   if [[ -n "$EMACS_SERVER" ]]; then
-    # emacsclient --socket-name=$EMACS_SERVER -n --alternate-editor="" -e "(switch-to-buffer (new-shell-get-buffer-create))"
-    emacsclient --socket-name=$EMACS_SERVER -n --alternate-editor="" -e "(new-shell-cmd $CMD)"
+    emacsclient --socket-name=$EMACS_SERVER -n --alternate-editor="" -e "(fresh-shell $CMD)"
   else
-    # emacsclient -c -n --alternate-editor="" -e "(switch-to-buffer (new-shell-get-buffer-create))"
-    emacsclient -c -n --alternate-editor="" -e "(new-shell-cmd $CMD)"
+    emacsclient -c -n --alternate-editor="" -e "(fresh-shell $CMD)"
   fi
 }
 alias gemacs-shell='_gemacs_shell'
@@ -265,3 +261,5 @@ ssh(){
 if [[ -v TMUX_ON_START && -z "$TMUX" ]]; then
   ([[ -v TMUX_ATTACH_ON_START ]] && tmux attach) || tmux new-session
 fi
+
+export PATH=$PATH:$HOME/dotfiles/scripts

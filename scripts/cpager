@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+## Preferred color pager, aware of nvim and emacs emulated terminals.
+
+if [[ -n "$NVIM" || -n "$EMACS_SERVER" ]]; then
+  cat
+else
+  command less $@
+fi
