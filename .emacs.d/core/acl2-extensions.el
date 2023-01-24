@@ -8,13 +8,29 @@
 
 ;;; Extensions and modifications to the standard Emacs file
 
+(define-key ctl-t-keymap "c" 'set-acl2-shell-buffer)
+(defun set-acl2-shell-buffer ()
+  (interactive)
+  ;; The original name is hard for me to remember since it doesn't mention acl2
+  (set-shell-buffer))
+
 (defun ashell ()
   (interactive)
   (save-window
    (shell (fresh-buffer-name "acl2%s"))
-   (set-shell-buffer)
+   (set-acl2-shell-buffer)
    (insert "$ACL2")
    (evil-newline)))
+
+(defun acl2 ()
+  (interactive)
+  (ashell))
+
+;; calls `ashell` if there is no acl2-shell
+(defun ashell-if-none ()
+  (interactive)
+  (unless (get-buffer *acl2-shell*)
+    (ashell)))
 
 (defun tramp-filename-to-local (filename)
   (car (last (split-string filename ":"))))
@@ -22,6 +38,7 @@
 (defun acl2-load-all-elsewhere ()
   (interactive)
   (save-window
+   (ashell-if-none)
    (select-window (get-buffer-window (get-buffer *acl2-shell*)))
    (goto-char (point-max))
    (insert
@@ -29,6 +46,7 @@
             ;; https://stackoverflow.com/a/455500/11126632
             (tramp-filename-to-local (buffer-file-name (nth 1 (buffer-list))))))
    (evil-newline)))
+
 
 (defun submit-theorem-elsewhere ()
   (interactive)
