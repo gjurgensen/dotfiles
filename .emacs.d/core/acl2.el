@@ -69,13 +69,13 @@
     ("dxg"   "" skel-dxg 0)
     ("dxm"   "" skel-dxm 0)
     ("hg"    "" skel-hg 0)
-    ("hid"   "" skel-hdi 0)
+    ("hid"   "" skel-hid 0)
     ("hie"   "" skel-hie 0)
     ("hied"  "" skel-hied 0)
     ("hu"    "" skel-hu 0)
     ("hui"   "" skel-hui 0)
     ("ghg"   "" skel-ghg 0)
-    ("ghid"  "" skel-ghdi 0)
+    ("ghid"  "" skel-ghid 0)
     ("ghie"  "" skel-ghie 0)
     ("ghied" "" skel-ghied 0)
     ("ghu"   "" skel-ghu 0)
@@ -93,7 +93,8 @@
 ;;; Misc
 
 ;; Courtesy of Eric Smith, modified for evil-mode compatibility
-(defalias 'strip-encloser
+;; (defalias 'strip-encloser
+(defalias 'strip
   (read-kbd-macro
    "\\ C-M-k \\ C-M-u \\ C-y \\ C-M-k \\ C-M-b \\ C-M-q"))
 
