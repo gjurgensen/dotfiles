@@ -1,3 +1,37 @@
+ESC_CODE_RED_FG=31
+ESC_CODE_GREEN_FG=32
+ESC_CODE_YELLOW_FG=33
+ESC_CODE_BLUE_FG=34
+ESC_CODE_MAGENTA_FG=35
+ESC_CODE_CYAN=36
+ESC_CODE_WHITE=37
+
+ESC_CODE_BRIGHT_BLACK=90
+ESC_CODE_GRAY=90
+ESC_CODE_BRIGHT_RED=91
+ESC_CODE_BRIGHT_GREEN=92
+ESC_CODE_BRIGHT_YELLOW=93
+ESC_CODE_BRIGHT_BLUE=94
+ESC_CODE_BRIGHT_MAGENTA=95
+ESC_CODE_BRIGHT_CYAN=96
+ESC_CODE_BRIGHT_WHITE=97
+
+# set_fg_color() {
+#   printf "\e[0;$1m"
+# }
+#
+# clear_fg_color() {
+#   printf "\e[0m"
+# }
+
+echo_color() {
+  printf "\e[0;$1m$2\e[0m\n"
+}
+
+echo_err(){
+  echo_color $ESC_CODE_BRIGHT_RED $1 > /dev/stderr
+}
+
 mkcd(){
   mkdir $1
   cd $1
@@ -137,21 +171,21 @@ e() {
   fi
 }
 
-less() {
-  if [[ -n "$NVIM" || -n "$EMACS_SERVER" ]]; then
-    cat
-  else
-    command less $@
-  fi
-}
+# less() {
+#   if [[ -n "$NVIM" || -n "$EMACS_SERVER" ]]; then
+#     cat
+#   else
+#     command less $@
+#   fi
+# }
 
-more() {
-  if [[ -n "$NVIM" || -n "$EMACS_SERVER" ]]; then
-    cat
-  else
-    command more $@
-  fi
-}
+# more() {
+#   if [[ -n "$NVIM" || -n "$EMACS_SERVER" ]]; then
+#     cat
+#   else
+#     command more $@
+#   fi
+# }
 
 # alias view='vim - -R --not-a-term'
 view() {
