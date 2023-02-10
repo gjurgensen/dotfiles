@@ -75,6 +75,22 @@
    (insert (format ":pe %s" (car kill-ring-yank-pointer)))
    (evil-newline)))
 
+(defun pe (str)
+  (interactive "sEvent name: ")
+  (save-window
+   (ashell-if-none)
+   (select-window (get-buffer-window (get-buffer *acl2-shell*)))
+   (goto-char (point-max))
+   (insert
+    (format ":pe %s" str))
+   (evil-newline)))
+
+(evil-define-command evil-pe (str)
+  (interactive "<a>")
+  (pe (or str (read-string "Event name: "))))
+
+(evil-ex-define-cmd "pe" 'evil-pe)
+
 (defun acl2-submit-pr ()
   (interactive)
   (save-window
@@ -83,6 +99,22 @@
    (goto-char (point-max))
    (insert (format ":pr %s" (car kill-ring-yank-pointer)))
    (evil-newline)))
+
+(defun pr (str)
+  (interactive "sRune: ")
+  (save-window
+   (ashell-if-none)
+   (select-window (get-buffer-window (get-buffer *acl2-shell*)))
+   (goto-char (point-max))
+   (insert
+    (format ":pr %s" str))
+   (evil-newline)))
+
+(evil-define-command evil-pr (str)
+  (interactive "<a>")
+  (pr (or str (read-string "Rune: "))))
+
+(evil-ex-define-cmd "pr" 'evil-pr)
 
 (defun acl2-submit-doc ()
   (interactive)

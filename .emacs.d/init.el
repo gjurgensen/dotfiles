@@ -221,6 +221,7 @@
   (set-frame-parameter (selected-frame) 'alpha '(97 . 95)))
 
 (defun set-style ()
+  (interactive)
   (if (display-graphic-p (selected-frame))
       (set-gui-style)
     (set-tui-style)))
