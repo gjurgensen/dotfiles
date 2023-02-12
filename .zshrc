@@ -1,3 +1,17 @@
+if [[ "$TERM" == "dumb" ]]
+then
+  unsetopt zle
+  unsetopt prompt_cr
+  unsetopt prompt_subst
+  if whence -w precmd >/dev/null; then
+      unfunction precmd
+  fi
+  if whence -w preexec >/dev/null; then
+      unfunction preexec
+  fi
+  PS1='$ '
+fi
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -103,4 +117,4 @@ source $ZSH/oh-my-zsh.sh
 # TODO: set j/k to completion alternatives
 bindkey -v
 
-source ~/.rc.sh
+source ~/dotfiles/rc/rc.sh

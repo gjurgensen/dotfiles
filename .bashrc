@@ -132,4 +132,4 @@ if [[ "$(set -o | grep 'emacs\|\bvi\b' | cut -f2 | tr '\n' ':')" != 'off:off:' ]
   bind '"\eOA": history-previous-history'
 fi
 
-source ~/.rc.sh
+source ~/dotfiles/rc/rc.sh
