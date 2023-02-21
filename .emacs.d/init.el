@@ -284,9 +284,9 @@
 
 (setq vc-follow-symlinks t)
 
-;; seL4 stuff
 (setq auto-mode-alist
-      (append '((".*\\.camkes\\'" . c-mode)
+      (append '(("Buildfile" . lisp-mode)
+                (".*\\.camkes\\'" . c-mode)
                 (".*\\.idl4\\'" . c-mode))
               auto-mode-alist))
 
