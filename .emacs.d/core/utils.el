@@ -229,8 +229,9 @@ in that direction and display the target buffer in said window."
      (switch-to-buffer buf)
      (goto-char (point-max))
      (when (stringp cmd)
-       (insert cmd))
-     (evil-newline)
+       (progn
+         (insert cmd)
+         (evil-newline)))
      buf)))
 
 (defun fresh-shell (&optional cmd base-fmt suffix-fmt number-init)

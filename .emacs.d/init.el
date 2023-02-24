@@ -62,7 +62,15 @@
   (define-key evil-visual-state-map " " 'evil-window-map)
   (define-key evil-window-map (kbd "TAB") 'toggle-prev-buffer)
   (define-key evil-visual-state-map "u" 'downcase-region-smart)
-  (define-key evil-visual-state-map "U" 'upcase-region-smart))
+  (define-key evil-visual-state-map "U" 'upcase-region-smart)
+
+  ;; "ns" = "named-shell"
+  (evil-define-command evil-ns (name)
+    (interactive "<a>")
+    (fresh-shell nil name))
+
+  (evil-ex-define-cmd "ns" 'evil-ns)
+  )
 
 (use-package evil-collection
   :after evil
