@@ -27,6 +27,22 @@ function liv {
   li "$@"
 }
 
+function greprv {
+  # This is very fragile, only works on simple cases
+  target_dir=$(ls -d $@)
+
+  local ls_ignore=$(get_vc_ignores $target_dir)
+  grepri "$@"
+}
+
+function grepriv {
+  # This is very fragile, only works on simple cases
+  target_dir=$(ls -d $@)
+
+  local ls_ignore="$ls_ignore $(get_vc_ignores $target_dir)"
+  grepri "$@"
+}
+
 
 # TODO: svn diff to temp file, and then only view if svn has good error code
 # Also maybe don't view empty diff

@@ -64,7 +64,12 @@ function li {
   eval "ls $ignores $@"
 }
 
-alias grepr='grep --color=always -HR'
+alias grepr='grep --color=always -IHR'
+
+function grepri {
+  local excludes=$(printf "$ls_ignore" | sed -E "s/([^[:blank:]]+)/--exclude=\"\1\"/g")
+  eval "grep --color=always -HR $excludes $@"
+}
 
 # https://askubuntu.com/questions/359492/create-a-shortcut-for-url
 function url_shortcut {
