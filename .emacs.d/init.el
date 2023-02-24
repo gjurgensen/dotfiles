@@ -62,7 +62,15 @@
   (define-key evil-visual-state-map " " 'evil-window-map)
   (define-key evil-window-map (kbd "TAB") 'toggle-prev-buffer)
   (define-key evil-visual-state-map "u" 'downcase-region-smart)
-  (define-key evil-visual-state-map "U" 'upcase-region-smart))
+  (define-key evil-visual-state-map "U" 'upcase-region-smart)
+
+  ;; "ns" = "named-shell"
+  (evil-define-command evil-ns (name)
+    (interactive "<a>")
+    (fresh-shell nil name))
+
+  (evil-ex-define-cmd "ns" 'evil-ns)
+  )
 
 (use-package evil-collection
   :after evil
@@ -176,8 +184,7 @@
 (use-package flycheck
   :ensure t
   :after exec-path-from-shell
-  :config
-  ; (global-flycheck-mode)
+  ; :config (global-flycheck-mode)
   )
 
 
@@ -206,12 +213,22 @@
 
 ;;; Global configuration
 
+;(set-display-table-slot buffer-display-table 'vertical-border ?│)
+;(set-display-table-slot standard-display-table 'vertical-border ?│)
+
+;; (defun set-tui-vertical-border ()
+;;   ;; Thicker version:
+;;   ;; (set-display-table-slot (or buffer-display-table standard-display-table) 'vertical-border ?┃)
+;;   (set-display-table-slot buffer-display-table 'vertical-border ?│)
+;;   ;(set-display-table-slot window-display-table 'vertical-border ?│)
+;;   (set-display-table-slot standard-display-table 'vertical-border ?│)
+;;   )
+
 (defun set-tui-vertical-border ()
-  ;; Thicker version:
-  ;; (set-display-table-slot (or buffer-display-table standard-display-table) 'vertical-border ?┃)
-  (set-display-table-slot buffer-display-table 'vertical-border ?│)
-  (set-display-table-slot standard-display-table 'vertical-border ?│)
-  )
+  (if (not (active-minibuffer-window))
+      (progn
+        (set-display-table-slot buffer-display-table 'vertical-border ?│)
+        (set-display-table-slot standard-display-table 'vertical-border ?│))))
 
 (defun set-tui-style ()
   (set-tui-vertical-border)
@@ -226,14 +243,18 @@
       (set-gui-style)
     (set-tui-style)))
 
+(defun set-style-foo ()
+  (if (display-graphic-p (selected-frame))
+      (set-gui-style)
+    (set-tui-style)))
+
 (if (display-graphic-p (selected-frame))
     (add-hook 'emacs-startup-hook 'set-gui-style)
   (add-hook 'emacs-startup-hook 'set-tui-style))
 
-;; This is probably overkill, but harmless. Solves an issue where vertical bar
-;; character was being unpredictably reset.
 (add-hook 'server-switch-hook 'set-style)
-(add-hook 'window-setup-hook  'set-style)
+;(add-hook 'window-setup-hook  'set-style)
+(add-hook 'window-configuration-change-hook 'set-tui-vertical-border)
 
 
 ;; TODO: restrict to text modes?
@@ -271,9 +292,9 @@
 
 (setq vc-follow-symlinks t)
 
-;; seL4 stuff
 (setq auto-mode-alist
-      (append '((".*\\.camkes\\'" . c-mode)
+      (append '(("Buildfile" . lisp-mode)
+                (".*\\.camkes\\'" . c-mode)
                 (".*\\.idl4\\'" . c-mode))
               auto-mode-alist))
 

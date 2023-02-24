@@ -71,6 +71,15 @@ function grepri {
   eval "grep --color=always -HR $excludes $@"
 }
 
+if [ -n "$(which rg)" ]; then
+  alias findlisp='rg -g "*.lisp"'
+else
+  alias findlisp='grep -R . --include="*.lisp" -n'
+fi
+
+# "find file"
+alias ff='find -L . -name '
+
 # https://askubuntu.com/questions/359492/create-a-shortcut-for-url
 function url_shortcut {
   if [[ -z "$1" ]]; then
