@@ -66,6 +66,15 @@ function li {
 
 alias grepr='grep --color=always -HR'
 
+if [ -n "$(which rg)" ]; then
+  alias findlisp='rg -g "*.lisp"'
+else
+  alias findlisp='grep -R . --include="*.lisp" -n'
+fi
+
+# "find file"
+alias ff='find -L . -name '
+
 # https://askubuntu.com/questions/359492/create-a-shortcut-for-url
 function url_shortcut {
   if [[ -z "$1" ]]; then
