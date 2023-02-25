@@ -21,6 +21,8 @@ Plugin 'dbeniamine/cheat.sh-vim'
 
 Plugin 'vim-scripts/VisIncr'
 
+Plugin 'fladson/vim-kitty'
+
 " Plugin 'neoclide/coc.nvim'
 
 call vundle#end()
