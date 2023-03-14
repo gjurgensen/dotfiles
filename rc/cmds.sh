@@ -56,7 +56,8 @@ function sopen {
 }
 
 
-alias sup='sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y'
+# alias sup='sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y'
+alias sup='sudo apt update; sudo apt upgrade -y; sudo apt autoremove -y'
 
 export ls_ignore="*.o *.bak *~"
 function li {
@@ -94,4 +95,12 @@ function url_shortcut {
 function ssh {
   command ssh "$@";
   term_color
+}
+
+function abs {
+  local dir="$1"
+  if [[ -z "$dir" ]]; then
+    dir=$(pwd)
+  fi
+  cd $(realpath $dir)
 }

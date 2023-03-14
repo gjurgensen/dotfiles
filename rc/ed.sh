@@ -93,7 +93,7 @@ export VIMINIT="source ~/.config/nvim/init.vim"
 # command vim - -R --not-a-term $@
 function view {
   local temp=$(mktemp)
-  cat > $temp
+  cat >| $temp
   nvim -R $temp $@
   rm $temp
 }
