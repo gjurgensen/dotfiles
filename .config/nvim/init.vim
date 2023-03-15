@@ -84,8 +84,8 @@ set relativenumber
 
 " Invisible characters
 set list
-" set listchars=tab:>\ ,space:·,trail:!,eol:¬
-set listchars=tab:>\ ,trail:!
+" set listchars=tab:»\ ,space:·,trail:!,eol:¬
+set listchars=tab:»\ ,trail:!
 
 " Exit terminal mode with <Esc>
 tnoremap <Esc> <C-\><C-n>
