@@ -81,6 +81,11 @@ fi
 # "find file"
 alias ff='find -L . -name '
 
+alias arm-gdb-qemu='_arm_gdb_qemu'
+function _arm_gdb_qemu {
+  arm-linux-gnueabi-gdb $1 -ex "target remote :1234" -ex "set substitute-path /host $(pwd)"
+}
+
 # https://askubuntu.com/questions/359492/create-a-shortcut-for-url
 function url_shortcut {
   if [[ -z "$1" ]]; then
