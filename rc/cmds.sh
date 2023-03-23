@@ -73,10 +73,28 @@ function grepri {
 }
 
 if [ -n "$(which rg)" ]; then
-  alias findlisp='rg -g "*.lisp"'
+  function findlisp {
+    rg -g "*.lisp" $@
+  }
+  alias _findlisp_E='findlisp'
 else
-  alias findlisp='grep -R . --include="*.lisp" -n'
+  function findlisp {
+    grep -R $@ . --include="*.lisp" -n
+  }
+  alias _findlisp_E='findlisp -E'
 fi
+function _findlisp_def {
+  _findlisp_E "\(def[^[:blank:]]*[[:blank:]]+$1([[:blank:]]|\r|\(|\)|$)"
+}
+alias findlisp-def='_findlisp_def'
+function _findlisp_fun {
+  _findlisp_E "\(def(und?(\-sk)?|ine(\-sk)?)?[[:blank:]]+$1([[:blank:]]|\r|\(|\)|$)"
+}
+alias findlisp-fun='_findlisp_fun'
+function _findlisp_thm {
+  _findlisp_E "\(def(thm(d?r?|g)|ruled?r?)[[:blank:]]+$1([[:blank:]]|\r|\(|\)|$)"
+}
+alias findlisp-thm='_findlisp_thm'
 
 # "find file"
 alias ff='find -L . -name '
