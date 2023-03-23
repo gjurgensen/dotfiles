@@ -127,3 +127,7 @@ function abs {
   fi
   cd $(realpath $dir)
 }
+
+# "Maybe Attach"
+alias mattach='tmux attach || tmux'
+alias mat='mattach'
