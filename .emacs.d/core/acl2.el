@@ -80,7 +80,7 @@
     ("ghied" "" skel-ghied 0)
     ("ghu"   "" skel-ghu 0)
     ("ghui"  "" skel-ghui 0)
-    ("agj"   ";;; Author: Grant Jurgensen (grant@kestrel.edu)" nil 0)
+    ("agj"   "; Author: Grant Jurgensen (grant@kestrel.edu)" nil 0)
     ("dxgt"  "(declare (xargs :guard t))" nil 0)
     ))
 
@@ -100,3 +100,7 @@
 
 (fset 'localize
       (kmacro-lambda-form [?% ?a ?\) escape ?h ?% ?i ?\( ?l ?o ?c ?a ?l ?  escape ?l ?\\] 0 "%d"))
+
+;; Doesn't work well right now
+(fset 'sparen
+      (kmacro-lambda-form [?% ?a ?\) escape ?h ?% ?i ?\( escape ?l ?\\] 0 "%d"))

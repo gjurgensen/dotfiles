@@ -1,4 +1,5 @@
 (provide 'utils)
+(require 'cl-lib)
 
 
 (defun toggle-prev-buffer ()
@@ -32,9 +33,10 @@
   "Save current window; execute BODY; restore window.
 
 Similar to `save-excursion'."
-  `(let ((ret-window (get-buffer-window (buffer-file-name (nth 1 (buffer-list))))))
-     ,@body
-     (select-window ret-window)))
+  `(let ((ret-window (get-buffer-window (buffer-file-name (nth 1 (buffer-list)))))
+         (save-window-ret (progn ,@body)))
+     (select-window ret-window)
+     save-window-ret))
 
 ;; https://emacs.stackexchange.com/questions/17306/upcase-whole-buffer-but-ignore-quoted-strings
 (defun downcase-region-smart (beg end)
@@ -241,3 +243,54 @@ in that direction and display the target buffer in said window."
     (shell-cmd-get-buffer-create
      cmd
      (fresh-buffer-name (or base-fmt "*shell%s*") suffix-fmt number-init)))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (defvar copyright-header-fmt-str
+;;       ""
+
+(defvar copyright-line-fmt-str "Copyright (C) %s %s")
+
+(defvar copyright-alist
+  '((ki . ("Kestrel Institute (https://www.kestrel.edu)"
+           "grant@kestrel.edu"))
+    (kt . ("Kestrel Technology LLC (http://kestreltechnology.com)"
+           "grant@kestreltechnology.com"))
+    (gj . ("Grant Jurgensen"
+           "grant@jurgensen.dev"))))
+
+;; TODO: add comments using comment-start and comment-end vars
+;; TODO: add authorhip
+;; TODO: add license option
+(defun copyright-header-lines (&optional entity)
+  (let* ((year (format-time-string "%G"))
+         (entity (or entity 'ki))
+         (entities (if (consp entity) entity (list entity)))
+         (copyright-lines
+          (mapcar
+           (lambda (ent) (format copyright-line-fmt-str year
+                                 (cadr (assoc ent copyright-alist))))
+           entities))
+         (authorship-line
+          (format "Author: Grant Jurgensen (%s)"
+                  (mapconcat
+                   (lambda (ent) (caddr (assoc ent copyright-alist)))
+                   entities ", "))))
+    (append copyright-lines (list "" authorship-line))))
+
+(defun unlines-comment (lines)
+  (mapconcat
+   (lambda (line)
+     (mapconcat
+      'identity
+      (cl-remove-if 'string-empty-p (list comment-start line comment-end))
+      " "))
+   lines "\n"))
+
+(defun copyright-header-str (&optional entity)
+  (unlines-comment (copyright-header-lines entity)))
+
+(defun copyright-header (&optional entity)
+  (interactive)
+  (insert (copyright-header-str entity)))

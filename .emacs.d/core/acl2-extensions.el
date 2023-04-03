@@ -14,22 +14,57 @@
   ;; The original name is hard for me to remember since it doesn't mention acl2
   (set-shell-buffer))
 
-(defun ashell ()
-  (interactive)
+;; (defun set-local-acl2-shell-buffer (shell-buf-name)
+;;   (interactive "B")
+;;   (let ((shell-buf (get-buffer shell-buf-name)))
+;;     (if shell-buf
+;;         (progn
+;;           (set (make-local-variable 'local-acl2-shell) shell-buf)
+;;           (message "Setting the local ACL2 shell to buffer %s" shell-buf))
+;;       (ashell shell-buf-name)
+;;   )
+;;
+;; (defun ashell ()
+;;   (interactive)
+;;   (save-window
+;;    (shell (fresh-buffer-name "acl2%s"))
+;;    (set-acl2-shell-buffer)
+;;    (insert "$ACL2")
+;;    (evil-newline)))
+
+(defun new-acl2-shell (name)
   (save-window
-   (shell (fresh-buffer-name "acl2%s"))
-   (set-acl2-shell-buffer)
+   (shell (fresh-buffer-name (concat shell-buf-name "%s")))
    (insert "$ACL2")
-   (evil-newline)))
+   (evil-newline)
+   (buffer-name (current-buffer))))
+
+(defun new-local-acl2-shell (shell-buf-name)
+  (interactive "B")
+  (set (make-local-variable 'local-acl2-shell)
+       (new-acl2-shell (concat shell-buf-name "%s")))
+  (message "Setting the local ACL2 shell to buffer %s" local-acl2-shell))
+
+(defun local-acl2-shell (shell-buf-name)
+  (interactive "B")
+  (set (make-local-variable 'local-acl2-shell)
+       (or (and (get-buffer shell-buf-name) shell-buf-name)
+           (new-acl2-shell (concat shell-buf-name "%s"))))
+  (message "Setting the local ACL2 shell to buffer %s" local-acl2-shell))
+
+(defun ashell (&optional shell-buf-name)
+  (interactive)
+  (new-local-acl2-shell (or shell-buf-name "acl2")))
 
 (defun acl2 ()
   (interactive)
   (ashell))
 
 ;; calls `ashell` if there is no acl2-shell
+;; TODO: also check if there is a global shell?
 (defun ashell-if-none ()
   (interactive)
-  (unless (get-buffer *acl2-shell*)
+  (unless (get-buffer local-acl2-shell)
     (ashell)))
 
 (defun tramp-filename-to-local (filename)
@@ -39,7 +74,9 @@
   (interactive)
   (save-window
    (ashell-if-none)
-   (select-window (get-buffer-window (get-buffer *acl2-shell*)))
+   ;; (select-window (get-buffer-window (get-buffer *acl2-shell*)))
+   ;; Todo assign buffer to window of not in one
+   (select-window (get-buffer-window (get-buffer local-acl2-shell)))
    (goto-char (point-max))
    (insert
     (format "(acl2::ld \"%s\")"
@@ -57,7 +94,8 @@
 (defun acl2-submit-undo-elsewhere ()
   (interactive)
   (save-window
-   (select-window (get-buffer-window (get-buffer *acl2-shell*)))
+   ;; (select-window (get-buffer-window (get-buffer *acl2-shell*)))
+   (select-window (get-buffer-window (get-buffer local-acl2-shell)))
    (goto-char (point-max))
    (insert
     (format ":ubt! %s"
@@ -79,7 +117,8 @@
   (interactive "sEvent name: ")
   (save-window
    (ashell-if-none)
-   (select-window (get-buffer-window (get-buffer *acl2-shell*)))
+   ;; (select-window (get-buffer-window (get-buffer *acl2-shell*)))
+   (select-window (get-buffer-window (get-buffer local-acl2-shell)))
    (goto-char (point-max))
    (insert
     (format ":pe %s" str))
@@ -95,7 +134,8 @@
   (interactive)
   (save-window
    (sp-copy-sexp)
-   (select-window (get-buffer-window (get-buffer *acl2-shell*)))
+   ;; (select-window (get-buffer-window (get-buffer *acl2-shell*)))
+   (select-window (get-buffer-window (get-buffer local-acl2-shell)))
    (goto-char (point-max))
    (insert (format ":pr %s" (car kill-ring-yank-pointer)))
    (evil-newline)))
@@ -104,7 +144,8 @@
   (interactive "sRune: ")
   (save-window
    (ashell-if-none)
-   (select-window (get-buffer-window (get-buffer *acl2-shell*)))
+   ;; (select-window (get-buffer-window (get-buffer *acl2-shell*)))
+   (select-window (get-buffer-window (get-buffer local-acl2-shell)))
    (goto-char (point-max))
    (insert
     (format ":pr %s" str))
@@ -120,7 +161,8 @@
   (interactive)
   (save-window
    (sp-copy-sexp)
-   (select-window (get-buffer-window (get-buffer *acl2-shell*)))
+   ;; (select-window (get-buffer-window (get-buffer *acl2-shell*)))
+   (select-window (get-buffer-window (get-buffer local-acl2-shell)))
    (goto-char (point-max))
    (insert (format ":doc %s" (car kill-ring-yank-pointer)))
    (evil-newline)))
