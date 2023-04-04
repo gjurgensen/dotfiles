@@ -14,24 +14,6 @@
   ;; The original name is hard for me to remember since it doesn't mention acl2
   (set-shell-buffer))
 
-;; (defun set-local-acl2-shell-buffer (shell-buf-name)
-;;   (interactive "B")
-;;   (let ((shell-buf (get-buffer shell-buf-name)))
-;;     (if shell-buf
-;;         (progn
-;;           (set (make-local-variable 'local-acl2-shell) shell-buf)
-;;           (message "Setting the local ACL2 shell to buffer %s" shell-buf))
-;;       (ashell shell-buf-name)
-;;   )
-;;
-;; (defun ashell ()
-;;   (interactive)
-;;   (save-window
-;;    (shell (fresh-buffer-name "acl2%s"))
-;;    (set-acl2-shell-buffer)
-;;    (insert "$ACL2")
-;;    (evil-newline)))
-
 (defun new-acl2-shell (name)
   (save-window
    (shell (fresh-buffer-name (concat shell-buf-name "%s")))
@@ -74,8 +56,7 @@
   (interactive)
   (save-window
    (ashell-if-none)
-   ;; (select-window (get-buffer-window (get-buffer *acl2-shell*)))
-   ;; Todo assign buffer to window of not in one
+   ;; Todo assign buffer to window if not in one
    (select-window (get-buffer-window (get-buffer local-acl2-shell)))
    (goto-char (point-max))
    (insert
@@ -85,16 +66,57 @@
    (evil-newline)))
 
 
+;; Modified from enter-theorem-fn in emacs-acl2.el
+(defun enter-theorem-fn-local (elsewhere)
+  (let* ((str (acl2-current-form-string))
+         (buf (get-buffer local-acl2-shell))
+         (win (if elsewhere
+                  (get-buffer-window buf)
+                (selected-window)))
+         (patterns *acl2-insert-pats*))
+    (unless buf
+      (error "Nonexistent *acl2-shell* buffer: %s" *acl2-shell*))
+    ;; Go to the *acl2-shell* buffer
+    (push-mark)
+    (if win
+        (select-window win)
+      (other-window 1))
+    (switch-to-buffer buf)
+    (goto-char (point-max))
+    ;; Check that there is a process in the buffer
+    (unless (get-buffer-process buf)
+      (error "Error: This buffer has no process!"))
+    ;; Check that we have a valid prompt at which to place the form.
+    (save-excursion
+      (forward-line 0)
+      (cond
+       ((null patterns))         ; nothing to check
+       ((eq (car patterns) :not) ; prompt must not match any of the regexps
+        (while (setq patterns (cdr patterns))
+          (when (looking-at (car patterns))
+            (error "Error: Detected non-ACL2 prompt, matching \"%s\"; see *acl2-insert-pats*"
+                   (car patterns)))))
+       (t                      ; prompt must match one of the regexeps
+        (let ((flg nil))
+          (while patterns
+            (cond ((looking-at (car patterns))
+                   (setq flg t)
+                   (setq patterns nil))
+                  (t (setq patterns (cdr patterns)))))
+          (or flg
+              (error "Error: Couldn't detect ACL2 prompt; see *acl2-insert-pats*"))))))
+    ;; Insert the form
+    (insert str)))
+
 (defun submit-theorem-elsewhere ()
   (interactive)
   (save-window
-   (enter-theorem-fn t)
+   (enter-theorem-fn-local t)
    (evil-newline)))
 
 (defun acl2-submit-undo-elsewhere ()
   (interactive)
   (save-window
-   ;; (select-window (get-buffer-window (get-buffer *acl2-shell*)))
    (select-window (get-buffer-window (get-buffer local-acl2-shell)))
    (goto-char (point-max))
    (insert
@@ -117,7 +139,6 @@
   (interactive "sEvent name: ")
   (save-window
    (ashell-if-none)
-   ;; (select-window (get-buffer-window (get-buffer *acl2-shell*)))
    (select-window (get-buffer-window (get-buffer local-acl2-shell)))
    (goto-char (point-max))
    (insert
@@ -134,7 +155,6 @@
   (interactive)
   (save-window
    (sp-copy-sexp)
-   ;; (select-window (get-buffer-window (get-buffer *acl2-shell*)))
    (select-window (get-buffer-window (get-buffer local-acl2-shell)))
    (goto-char (point-max))
    (insert (format ":pr %s" (car kill-ring-yank-pointer)))
@@ -144,7 +164,6 @@
   (interactive "sRune: ")
   (save-window
    (ashell-if-none)
-   ;; (select-window (get-buffer-window (get-buffer *acl2-shell*)))
    (select-window (get-buffer-window (get-buffer local-acl2-shell)))
    (goto-char (point-max))
    (insert
@@ -161,7 +180,6 @@
   (interactive)
   (save-window
    (sp-copy-sexp)
-   ;; (select-window (get-buffer-window (get-buffer *acl2-shell*)))
    (select-window (get-buffer-window (get-buffer local-acl2-shell)))
    (goto-char (point-max))
    (insert (format ":doc %s" (car kill-ring-yank-pointer)))
