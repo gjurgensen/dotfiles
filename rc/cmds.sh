@@ -96,6 +96,10 @@ function _findlisp_thm {
 }
 alias findlisp-thm='_findlisp_thm'
 
+function lisptags {
+  find . -name "*.lisp" -type f | etags -
+}
+
 # "find file"
 alias ff='find -L . -name '
 
