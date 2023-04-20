@@ -54,3 +54,8 @@ function svndiff {
 function svnlog {
   svn log -l 20 | view
 }
+
+function svnretromv {
+  mv "$2" "$1"
+  svn mv "$1" "$2"
+}
