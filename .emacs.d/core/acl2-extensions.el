@@ -6,6 +6,40 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; Whould lisp-interaction-mode-syntax-table be preferable?
+(define-derived-mode acl2-shell-mode shell-mode "ACL2 shell" nil :syntax-table lisp-mode-syntax-table
+  (setq font-lock-defaults
+        '((lisp-el-font-lock-keywords lisp-el-font-lock-keywords-1 lisp-el-font-lock-keywords-2)
+         ;; nil nil nil nil
+         nil t nil nil
+         (font-lock-mark-block-function . mark-defun)
+         (font-lock-extra-managed-props help-echo)
+         (font-lock-syntactic-face-function . lisp-font-lock-syntactic-face-function))))
+
+(font-lock-add-keywords
+ 'acl2-shell-mode
+ '(("(\\(def\\w*\\)\\_>\\s *\\(\\(?:\\sw\\|\\s_\\)+\\)?"
+    (1 font-lock-keyword-face nil t)
+    (2 font-lock-function-name-face nil t))
+   ("(\\(defattach\\|defevaluator\||defrefinement\\)\\_>\\s *\\(\\(?:\\sw\\|\\s_\\)+\\)?\\s *\\(\\(?:\\sw\\|\\s_\\)+\\)?"
+    (1 font-lock-keyword-face nil t)
+    (2 font-lock-function-name-face nil t)
+    (3 font-lock-function-name-face nil t))
+   ("(\\(comp\\|encapsulate\\|partial-encapsulate\\|in-theory\\|in-arithmetic-theory\\|include-book\\|local\\)\\>"
+    . 1)
+   ("(\\(make-event\\|memoize\\|unmemoize\\|mutual-recursion\\|profile\\|prog[^ \t]*\\)\\>"
+    . 1)
+   ("(\\(set-body\\|table\\|theory-invariant\\)\\>"
+    . 1)
+   ("(\\(value-triple\\|verify-guards\\|verify-termination\\)\\>"
+    . 1)))
+
+(use-package rainbow-delimiters
+  :config (add-hook 'acl2-shell-mode-hook #'rainbow-delimiters-mode))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;; Extensions and modifications to the standard Emacs file
 
 (define-key ctl-t-keymap "c" 'set-acl2-shell-buffer)
@@ -17,6 +51,9 @@
 (defun new-acl2-shell (name)
   (save-window
    (shell (fresh-buffer-name (concat shell-buf-name "%s")))
+   ;; (set (make-local-variable 'font-lock-defaults)
+   ;;   '((lisp-cl-font-lock-keywords lisp-cl-font-lock-keywords-1 lisp-cl-font-lock-keywords-2) nil t nil nil (font-lock-mark-block-function . mark-defun) (font-lock-extra-managed-props help-ech) (font-lock-syntactic-face-function . lifp-font-lock-syntactic-face-function)))
+   (acl2-shell-mode)
    (insert "$ACL2")
    (evil-newline)
    (buffer-name (current-buffer))))

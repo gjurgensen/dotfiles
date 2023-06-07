@@ -163,17 +163,13 @@
   (add-hook 'coq-mode-hook (lambda () (prettify-symbols-mode))))
 
 
+(use-package haskell-mode
+  :ensure t)
+
+
 (use-package doom-modeline
   :ensure t
-  :after all-the-icons
-  :init
-  (doom-modeline-mode 1)
-  (setq doom-modeline-icon t)
-  (setq doom-modeline-modal-icon t))
-
-;; May need to run `(all-the-icons-install-fonts)` on initial install?
-(use-package all-the-icons
-  :ensure t)
+  :init (doom-modeline-mode 1))
 
 
 (use-package treemacs
@@ -254,7 +250,7 @@
 
 (add-hook 'server-switch-hook 'set-style)
 ;(add-hook 'window-setup-hook  'set-style)
-(add-hook 'window-configuration-change-hook 'set-tui-vertical-border)
+;(add-hook 'window-configuration-change-hook 'set-tui-vertical-border)
 
 
 ;; TODO: restrict to text modes?
@@ -281,13 +277,16 @@
 (setq-default mode-line-end-spaces nil)
 
 (setq-default whitespace-style '(face tab-mark tabs))
-(setq-default custom-tab-width 4)
+(setq-default custom-tab-width 2)
 (setq-default indent-tabs-mode nil)
 (global-whitespace-mode)
+
+(setq c-basic-offset 2)
 
 (setq initial-scratch-message nil)
 
 (setq-default show-trailing-whitespace t)
+(add-hook 'shell-mode-hook (lambda () (setq show-trailing-whitespace nil)))
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 (setq vc-follow-symlinks t)
