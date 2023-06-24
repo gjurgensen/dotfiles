@@ -151,6 +151,56 @@
    (enter-theorem-fn-local t)
    (evil-newline)))
 
+
+(defun symbol-has-name-ignore-case (sym name)
+  (eq t (compare-strings (symbol-name sym) nil nil name nil nil t)))
+
+;; TODO: give special treatment to local (look downward for immediate
+;; include-book).
+(defun get-include-book-form-excursion ()
+  (let ((sexp (sexp-at-point)))
+    (if (and (consp sexp)
+             (symbol-has-name-ignore-case (car sexp) "include-book"))
+        sexp
+      (condition-case nil
+          (progn (backward-up-list nil t)
+                 (get-include-book-form-excursion))
+        (error nil)))))
+
+(defun key-val-seq-to-alist (lst)
+  (and (consp lst)
+       (consp (cdr lst))
+       (cons (cons (car lst) (cadr lst))
+             (key-val-seq-to-alist (cddr lst)))))
+
+(defun assoc-with (key-match alist)
+  (and (consp alist)
+       (if (funcall key-match (caar alist))
+           (car alist)
+         (assoc-with key-match (cdr alist)))))
+
+(defun get-include-book-filepath ()
+  (interactive)
+  (let ((form (save-excursion (get-include-book-form-excursion))))
+    (if form
+        (if (< (length form) 2)
+            (error "include-book form is ill-formed.")
+          (let ((path (nth 1 form))
+                (dir (if (symbol-has-name-ignore-case
+                          ;; (cdr (assoc ':dir (key-val-seq-to-alist (cddr form))))
+                          (cdr (assoc-with (lambda (x) (symbol-has-name-ignore-case x ":dir"))
+                                           (key-val-seq-to-alist (cddr form))))
+                          ":system")
+                         (concat (getenv "ACL2_ROOT") "/books/")
+                       (file-name-directory (buffer-file-name)))))
+            (concat dir path ".lisp")))
+      (error "Could not get include-book form."))))
+
+(defun open-include ()
+  (interactive)
+  (find-file (get-include-book-filepath)))
+
+
 (defun acl2-submit-undo-elsewhere ()
   (interactive)
   (save-window
@@ -226,6 +276,7 @@
 (define-key ctl-t-keymap "\C-u" 'acl2-submit-undo-elsewhere)
 (define-key ctl-t-keymap "\C-p" 'acl2-submit-pe)
 (define-key ctl-t-keymap "\C-o" 'acl2-submit-pr)
+(define-key ctl-t-keymap "\C-i" 'open-include)
 (define-key ctl-t-keymap "\C-d" 'acl2-submit-doc)
 ;; Overwrites enter-theorem-elsewhere
 (define-key ctl-t-keymap "\C-e" 'submit-theorem-elsewhere)
