@@ -41,19 +41,21 @@ function latexc {
   fi
 }
 
-# Likely shadows bin `open`, alias for `xdg-open`
-function open {
-  local ARG
-  if [[ -z "$1" ]]; then
-    ARG="."
-  else
-    ARG="$1"
-  fi
-  xdg-open "$ARG"
-}
-function sopen {
-  open "$@" > /dev/null 2> /dev/null
-}
+if [ "$(which xdg-open)" ]; then
+  # Likely shadows bin `open`, alias for `xdg-open`
+  function open {
+    local ARG
+    if [[ -z "$1" ]]; then
+      ARG="."
+    else
+      ARG="$1"
+    fi
+    xdg-open "$ARG"
+  }
+  function sopen {
+    open "$@" > /dev/null 2> /dev/null
+  }
+fi
 
 
 # alias sup='sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y'
