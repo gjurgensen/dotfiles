@@ -21,6 +21,15 @@ function unbak {
   mv $1.bak $1
 }
 
+function swap {
+  template=`basename $1`
+  tempfile=`mktemp ./${template}.XXXXX`
+  # echo $tempfile
+  mv $1 ${tempfile}
+  mv $2 $1
+  mv ${tempfile} $2
+}
+
 function whereami {
   echo $HOST
 }
