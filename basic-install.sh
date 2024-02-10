@@ -2,6 +2,7 @@
 
 set -o errexit
 
+mkdir -p ${HOME}/.config
 
 # Create symbolic links
 
