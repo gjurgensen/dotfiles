@@ -218,7 +218,7 @@ in that direction and display the target buffer in said window."
           ((window-in-direction direction))
           (t
            (split-window (selected-window) size direction pixelwise)))))
-    (window--display-buffer buffer window 'window alist display-buffer-mark-dedicated)
+    (window--display-buffer buffer window 'window alist)
     window))
 
 
