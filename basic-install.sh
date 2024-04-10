@@ -2,10 +2,11 @@
 
 set -o errexit
 
+mkdir -p ${HOME}/.config
 
 # Create symbolic links
 
-links=".bashrc .config/kitty .config/nvim .emacs.d .git .gitconfig .subversion .tmux.conf .zlogout .zshrc .vimrc"
+links=".bashrc .config/kitty .config/nvim .emacs.d .gitconfig .subversion .tmux.conf .zlogout .zshrc .vimrc"
 
 for link in $links; do
   source=${HOME}/dotfiles/$link
