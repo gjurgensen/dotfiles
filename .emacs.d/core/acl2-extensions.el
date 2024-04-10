@@ -50,13 +50,15 @@
 
 (defun new-acl2-shell (name)
   (save-window
-   (shell (fresh-buffer-name (concat shell-buf-name "%s")))
-   ;; (set (make-local-variable 'font-lock-defaults)
-   ;;   '((lisp-cl-font-lock-keywords lisp-cl-font-lock-keywords-1 lisp-cl-font-lock-keywords-2) nil t nil nil (font-lock-mark-block-function . mark-defun) (font-lock-extra-managed-props help-ech) (font-lock-syntactic-face-function . lifp-font-lock-syntactic-face-function)))
-   (acl2-shell-mode)
-   (insert "$ACL2")
-   (evil-newline)
-   (buffer-name (current-buffer))))
+   (let ((curr-buf (current-buffer))
+         (acl2-buf (shell-get-buffer-create (fresh-buffer-name name))))
+     (my-display-buffer acl2-buf nil 'right)
+     (switch-to-buffer acl2-buf)
+     (acl2-shell-mode)
+     (insert "$ACL2")
+     (evil-newline)
+     (switch-to-buffer curr-buf)
+     (buffer-name acl2-buf))))
 
 (defun new-local-acl2-shell (shell-buf-name)
   (interactive "B")
