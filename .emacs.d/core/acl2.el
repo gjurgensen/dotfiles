@@ -12,6 +12,7 @@
 (defvar acl2-skip-shell nil)
 (setq acl2-skip-shell t)
 (and (wload "${ACL2_ROOT}/books/emacs/emacs-acl2.el")
+     (wload "${ACL2_ROOT}/books/interface/emacs/acl2-indent.el")
      (wload "~/.emacs.d/core/acl2-extensions.el"))
 
 

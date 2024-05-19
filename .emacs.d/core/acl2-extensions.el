@@ -17,6 +17,11 @@
          (font-lock-syntactic-face-function . lisp-font-lock-syntactic-face-function))))
 
 (font-lock-add-keywords
+ 'lisp-mode
+ '(("(\\(thm\\|rule\\|set-induction-depth-limit\\)\\>"
+    . 1)))
+
+(font-lock-add-keywords
  'acl2-shell-mode
  '(("(\\(def\\w*\\)\\_>\\s *\\(\\(?:\\sw\\|\\s_\\)+\\)?"
     (1 font-lock-keyword-face nil t)
@@ -26,6 +31,8 @@
     (2 font-lock-function-name-face nil t)
     (3 font-lock-function-name-face nil t))
    ("(\\(comp\\|encapsulate\\|partial-encapsulate\\|in-theory\\|in-arithmetic-theory\\|include-book\\|local\\)\\>"
+    . 1)
+   ("(\\(thm\\|rule\\|set-induction-depth-limit\\)\\>"
     . 1)
    ("(\\(make-event\\|memoize\\|unmemoize\\|mutual-recursion\\|profile\\|prog[^ \t]*\\)\\>"
     . 1)

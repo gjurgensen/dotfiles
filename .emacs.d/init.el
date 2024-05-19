@@ -37,6 +37,7 @@
 
 ;; Add MELPA package archives
 (require 'package)
+;; (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
 
@@ -109,14 +110,15 @@
   (setq org-image-actual-width nil))
 
 
-(use-package abbrev-mode
-  :init
-  (setq-default abbrev-mode t)
-  (add-hook 'coq-mode-hook (lambda () (setq abbrev-mode nil)))
-  :config
-  (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
-  (read-abbrev-file "~/.emacs.d/abbrev_defs")
-  (setq save-abbrevs 'silently))
+;; (use-package abbrev-mode
+;;   :ensure nil
+;;   :init
+;;   (setq-default abbrev-mode t)
+;;   (add-hook 'coq-mode-hook (lambda () (setq abbrev-mode nil)))
+;;   :config
+;;   (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
+;;   (read-abbrev-file "~/.emacs.d/abbrev_defs")
+;;   (setq save-abbrevs 'silently))
 
 
 (use-package autothemer
@@ -204,6 +206,35 @@
   (define-key evil-window-map (kbd "8") 'eyebrowse-switch-to-window-config-8)
   (define-key evil-window-map (kbd "9") 'eyebrowse-switch-to-window-config-9)
   :config (eyebrowse-mode t))
+
+
+;; For copilot
+
+;; (use-package editorconfig
+;;   :ensure t)
+
+;; (use-package jsonrpc
+;;   :ensure t)
+
+;; (use-package copilot
+;;   :ensure t
+;;   ;; :quelpa (copilot :fetcher github
+;;   ;;                  :repo "copilot-emacs/copilot.el"
+;;   ;;                  :branch "main"
+;;   ;;                  :files ("*.el"))
+;;   :hook (prog-mode . copilot-mode)
+;;   :bind (:map copilot-completion-map
+;;               ;; ("<tab>" . 'copilot-accept-completion)
+;;               ;; ("TAB" . 'copilot-accept-completion)
+;;               ;; ("C-TAB" . 'copilot-accept-completion-by-word)
+;;               ;; ("C-<tab>" . 'copilot-accept-completion-by-word)
+;;               ("<tab>" . 'copilot-accept-completion-by-word)
+;;               ("TAB" . 'copilot-accept-completion-by-word)
+;;               ("C-TAB" . 'copilot-accept-completion)
+;;               ("C-<tab>" . 'copilot-accept-completion)
+;;               )
+;;   :init (add-to-list 'warning-suppress-types '(copilot)))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -303,6 +334,16 @@
           (lambda ()
             (when (daemonp)
               (setenv "EMACS_SERVER" server-name))))
+
+
+;; abbrev-mode config/hooks
+(setq-default abbrev-mode t)
+(add-hook 'coq-mode-hook (lambda () (setq abbrev-mode nil)))
+(add-hook 'abbrev-mode-hook
+          (lambda ()
+            (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
+            (read-abbrev-file "~/.emacs.d/abbrev_defs")
+            (setq save-abbrevs 'silently)))
 
 ;; (custom-set-variables
 ;;  '(initial-frame-alist (quote ((fullscreen . maximized)))))
