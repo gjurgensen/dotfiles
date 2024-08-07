@@ -64,6 +64,7 @@
   (define-key evil-window-map (kbd "TAB") 'toggle-prev-buffer)
   (define-key evil-visual-state-map "u" 'downcase-region-smart)
   (define-key evil-visual-state-map "U" 'upcase-region-smart)
+  (evil-set-undo-system 'undo-redo)
 
   ;; "ns" = "named-shell"
   (evil-define-command evil-ns (name)
@@ -107,7 +108,8 @@
   (define-skeleton org-header "" nil
     "#+title: " _ "\n#+author: Grant Jurgensen")
   :init
-  (setq org-image-actual-width nil))
+  (setq org-image-actual-width nil)
+  (setq org-startup-folded t))
 
 
 ;; (use-package abbrev-mode
