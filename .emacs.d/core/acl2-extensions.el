@@ -19,11 +19,17 @@
 (font-lock-add-keywords
  'lisp-mode
  '(("(\\(thm\\|rule\\|set-induction-depth-limit\\)\\>"
-    . 1)))
+    . 1)
+   ("(\\(defret-mutual\\)\\_>\\s *\\(\\(?:\\sw\\|\\s_\\)+\\)?"
+    (1 font-lock-keyword-face nil t)
+    (2 font-lock-function-name-face nil t))))
 
 (font-lock-add-keywords
  'acl2-shell-mode
  '(("(\\(def\\w*\\)\\_>\\s *\\(\\(?:\\sw\\|\\s_\\)+\\)?"
+    (1 font-lock-keyword-face nil t)
+    (2 font-lock-function-name-face nil t))
+   ("(\\(defret-mutual\\)\\_>\\s *\\(\\(?:\\sw\\|\\s_\\)+\\)?"
     (1 font-lock-keyword-face nil t)
     (2 font-lock-function-name-face nil t))
    ("(\\(defattach\\|defevaluator\||defrefinement\\)\\_>\\s *\\(\\(?:\\sw\\|\\s_\\)+\\)?\\s *\\(\\(?:\\sw\\|\\s_\\)+\\)?"
@@ -57,11 +63,15 @@
 
 (defun new-acl2-shell (name)
   (save-window
-   (let ((curr-buf (current-buffer))
-         (acl2-buf (shell-get-buffer-create (fresh-buffer-name name))))
+   (let* ((curr-buf (current-buffer))
+          (adir (locate-dominating-file (buffer-file-name curr-buf) "saved_acl2"))
+          (acl2-buf (shell-get-buffer-create (fresh-buffer-name name))))
      (my-display-buffer acl2-buf nil 'right)
      (switch-to-buffer acl2-buf)
      (acl2-shell-mode)
+     (if adir
+         (progn (insert (concat "adir " adir))
+                (evil-newline)))
      (insert "$ACL2")
      (evil-newline)
      (switch-to-buffer curr-buf)
@@ -109,6 +119,72 @@
     (format "(acl2::ld \"%s\")"
             ;; https://stackoverflow.com/a/455500/11126632
             (tramp-filename-to-local (buffer-file-name (nth 1 (buffer-list))))))
+   (evil-newline)))
+
+
+(defun load-to-shell-temp-file ()
+  (let ((flg (buffer-modified-p)))
+    (save-excursion
+      ;; (goto-char (point-min))
+      (write-region (point-min) (point) (shell-temp-file-name)))
+    (set-buffer-modified-p flg)))
+
+(defun acl2-load-to-elsewhere ()
+  (interactive)
+  "Load file up to point of current cursor"
+  (save-window
+   (ashell-if-none)
+   (load-to-shell-temp-file)
+   ;; Todo assign buffer to window if not in one
+   (select-window (get-buffer-window (get-buffer local-acl2-shell)))
+   (goto-char (point-max))
+   (insert
+    (format "(acl2::ld \"%s\")"
+            (shell-temp-file-name)))
+   (evil-newline)))
+
+(defun acl2-ubi-load-to-elsewhere ()
+  (interactive)
+  (save-window
+   (ashell-if-none)
+   (load-to-shell-temp-file)
+   ;; Todo assign buffer to window if not in one
+   (select-window (get-buffer-window (get-buffer local-acl2-shell)))
+   (goto-char (point-max))
+   (insert
+    (format ":ubi\n(acl2::ld \"%s\")"
+            (shell-temp-file-name)))
+   (evil-newline)))
+
+(defun acl2-fresh-load-to-elsewhere ()
+  (interactive)
+  (save-window
+   (ashell-if-none)
+   (load-to-shell-temp-file)
+   ;; Todo assign buffer to window if not in one
+   (select-window (get-buffer-window (get-buffer local-acl2-shell)))
+   (goto-char (point-max))
+   (insert ":quit")
+   (evil-newline)
+   (insert "$ACL2")
+   (evil-newline)
+   (insert
+    (format "(acl2::ld \"%s\")"
+            (shell-temp-file-name)))
+   (evil-newline)))
+
+(defun acl2-load-to-elsewhere-skip-proofs ()
+  (interactive)
+  "Load file up to point of current cursor"
+  (save-window
+   (ashell-if-none)
+   (load-to-shell-temp-file)
+   ;; Todo assign buffer to window if not in one
+   (select-window (get-buffer-window (get-buffer local-acl2-shell)))
+   (goto-char (point-max))
+   (insert
+    (format "(acl2::ld \"%s\" :ld-skip-proofsp t)"
+            (shell-temp-file-name)))
    (evil-newline)))
 
 
@@ -289,3 +365,8 @@
 (define-key ctl-t-keymap "\C-d" 'acl2-submit-doc)
 ;; Overwrites enter-theorem-elsewhere
 (define-key ctl-t-keymap "\C-e" 'submit-theorem-elsewhere)
+;; Overwrites something
+(define-key ctl-t-keymap "\C-f" 'acl2-load-to-elsewhere)
+(define-key ctl-t-keymap "\C-F" 'acl2-ubi-load-to-elsewhere)
+(define-key ctl-t-keymap "\C-g" 'acl2-fresh-load-to-elsewhere)
+(define-key ctl-t-keymap "\C-s" 'acl2-load-to-elsewhere-skip-proofs)
