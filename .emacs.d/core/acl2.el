@@ -32,6 +32,9 @@
 (define-skeleton skel-hg "" nil
   ":hints ((\"Goal\" " _ "))")
 
+(define-skeleton skel-hind "" nil
+  ":hints ((\"Goal\" :induct (" _ ")))")
+
 (define-skeleton skel-hid "" nil
   ":hints ((\"Goal\" :in-theory (disable " _ ")))")
 
@@ -70,6 +73,7 @@
     ("dxg"   "" skel-dxg 0)
     ("dxm"   "" skel-dxm 0)
     ("hg"    "" skel-hg 0)
+    ("hind"  "" skel-hind 0)
     ("hid"   "" skel-hid 0)
     ("hie"   "" skel-hie 0)
     ("hied"  "" skel-hied 0)
