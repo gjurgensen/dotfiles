@@ -83,7 +83,10 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+# plugins=(git)
+fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
+# plugins=(git zsh-completions zsh-autocomplete zsh-syntax-highlighting)
+plugins=(git zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -116,5 +119,7 @@ source $ZSH/oh-my-zsh.sh
 # Use vi mode
 # TODO: set j/k to completion alternatives
 bindkey -v
+
+zstyle ':completion:*:*:*:*:*' ignored-patterns '*.out' '*.acl2x' '*.cert' '*.cert.temp' '*.port' '*.dx32fsl' '*.lx32fsl' '*.d64fsl' '*.dx64fsl' '*.lx64fsl' '*.fx64fsl' '*.wx32fsl' '*.wx64fsl' '*.fx86fsl'
 
 source ~/dotfiles/rc/rc.sh
