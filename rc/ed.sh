@@ -56,6 +56,7 @@ function unemacs {
   rm -if $ARG/*~
   rm -if $ARG/*#*#*
   # rm -if .#*
+  rm -if $ARG/temp-emacs-file.lsp
 }
 
 

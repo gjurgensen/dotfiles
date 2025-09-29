@@ -143,6 +143,29 @@ function abs {
   cd $(realpath $dir)
 }
 
+# TODO: make recursive?
+function aclean {
+  local ARG
+  if [[ -z "$1" ]]; then
+    ARG="."
+  else
+    ARG="$1"
+  fi
+
+  rm -if $ARG/*.cert
+  rm -if $ARG/*.port
+  rm -if $ARG/*.cert.out
+  rm -if $ARG/*.lx64fsl
+  rm -if $ARG/*.fasl
+  rm -if $ARG/Makefile-tmp
+  rm -if $ARG/temp-emacs-file.lsp
+}
+
+# cd to the canonical version of the current path
+function real {
+  cd $(realpath .)
+}
+
 # "Maybe Attach"
 alias mattach='tmux attach || tmux'
 alias mat='mattach'
