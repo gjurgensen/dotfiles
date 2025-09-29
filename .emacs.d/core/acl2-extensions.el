@@ -20,18 +20,22 @@
  'lisp-mode
  '(("(\\(thm\\|rule\\|set-induction-depth-limit\\)\\>"
     . 1)
-   ("(\\(defret-mutual\\)\\_>\\s *\\(\\(?:\\sw\\|\\s_\\)+\\)?"
+   ("(\\(def\\(\\w\\|-\\|+\\)*\\)\\_>\\s *\\(\\(?:\\sw\\|\\s_\\)+\\)?"
     (1 font-lock-keyword-face nil t)
-    (2 font-lock-function-name-face nil t))))
+    (3 font-lock-function-name-face nil t))
+   ("(\\(\\w*::def\\(\\w\\|-\\|+\\)*\\)\\_>\\s *\\(\\(?:\\sw\\|\\s_\\)+\\)?"
+    (1 font-lock-keyword-face nil t)
+    (3 font-lock-function-name-face nil t))
+   ))
 
 (font-lock-add-keywords
  'acl2-shell-mode
- '(("(\\(def\\w*\\)\\_>\\s *\\(\\(?:\\sw\\|\\s_\\)+\\)?"
+ '(("(\\(def\\(\\w\\|-\\|+\\)*\\)\\_>\\s *\\(\\(?:\\sw\\|\\s_\\)+\\)?"
     (1 font-lock-keyword-face nil t)
-    (2 font-lock-function-name-face nil t))
-   ("(\\(defret-mutual\\)\\_>\\s *\\(\\(?:\\sw\\|\\s_\\)+\\)?"
+    (3 font-lock-function-name-face nil t))
+   ("(\\(\\w*::def\\(\\w\\|-\\|+\\)*\\)\\_>\\s *\\(\\(?:\\sw\\|\\s_\\)+\\)?"
     (1 font-lock-keyword-face nil t)
-    (2 font-lock-function-name-face nil t))
+    (3 font-lock-function-name-face nil t))
    ("(\\(defattach\\|defevaluator\||defrefinement\\)\\_>\\s *\\(\\(?:\\sw\\|\\s_\\)+\\)?\\s *\\(\\(?:\\sw\\|\\s_\\)+\\)?"
     (1 font-lock-keyword-face nil t)
     (2 font-lock-function-name-face nil t)
@@ -45,11 +49,29 @@
    ("(\\(set-body\\|table\\|theory-invariant\\)\\>"
     . 1)
    ("(\\(value-triple\\|verify-guards\\|verify-termination\\)\\>"
-    . 1)))
+    . 1)
+   ))
 
 (use-package rainbow-delimiters
   :config (add-hook 'acl2-shell-mode-hook #'rainbow-delimiters-mode))
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Courtesy of ChatGPT
+(defun amark ()
+  "Place a visual marker at the current cursor position."
+  (interactive)
+  (clear-amark)
+  (let ((marker (make-overlay (point) (point))))
+    (overlay-put marker 'cursor-marker t)
+    (overlay-put marker 'after-string
+                 (propertize "▼" 'face '(:foreground "#83A598")))
+    marker))
+
+(defun clear-amark ()
+  (interactive)
+  (remove-overlays (point-min) (point-max) 'cursor-marker t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -65,6 +87,7 @@
   (save-window
    (let* ((curr-buf (current-buffer))
           (adir (locate-dominating-file (buffer-file-name curr-buf) "saved_acl2"))
+          ;; (adir (file-name-directory (buffer-file-name curr-buf)))
           (acl2-buf (shell-get-buffer-create (fresh-buffer-name name))))
      (my-display-buffer acl2-buf nil 'right)
      (switch-to-buffer acl2-buf)
@@ -132,6 +155,7 @@
 (defun acl2-load-to-elsewhere ()
   (interactive)
   "Load file up to point of current cursor"
+  (amark)
   (save-window
    (ashell-if-none)
    (load-to-shell-temp-file)
@@ -145,6 +169,7 @@
 
 (defun acl2-ubi-load-to-elsewhere ()
   (interactive)
+  (amark)
   (save-window
    (ashell-if-none)
    (load-to-shell-temp-file)
@@ -158,6 +183,7 @@
 
 (defun acl2-fresh-load-to-elsewhere ()
   (interactive)
+  (amark)
   (save-window
    (ashell-if-none)
    (load-to-shell-temp-file)
@@ -176,6 +202,7 @@
 (defun acl2-load-to-elsewhere-skip-proofs ()
   (interactive)
   "Load file up to point of current cursor"
+  (amark)
   (save-window
    (ashell-if-none)
    (load-to-shell-temp-file)
@@ -370,3 +397,29 @@
 (define-key ctl-t-keymap "\C-F" 'acl2-ubi-load-to-elsewhere)
 (define-key ctl-t-keymap "\C-g" 'acl2-fresh-load-to-elsewhere)
 (define-key ctl-t-keymap "\C-s" 'acl2-load-to-elsewhere-skip-proofs)
+
+(define-key evil-x-map "r" 'acl2-load-all-elsewhere)
+(define-key evil-x-map "u" 'acl2-submit-undo-elsewhere)
+;; (define-key evil-x-map "p" 'acl2-submit-pe)
+(define-key evil-x-map "o" 'acl2-submit-pr)
+(define-key evil-x-map "i" 'open-include)
+(define-key evil-x-map "d" 'acl2-submit-doc)
+;; (define-key evil-x-map "e" 'submit-theorem-elsewhere)
+(define-key evil-x-map "x" 'submit-theorem-elsewhere)
+(define-key evil-x-map "f" 'acl2-load-to-elsewhere)
+(define-key evil-x-map "F" 'acl2-ubi-load-to-elsewhere)
+(define-key evil-x-map "g" 'acl2-fresh-load-to-elsewhere)
+(define-key evil-x-map "s" 'acl2-load-to-elsewhere-skip-proofs)
+
+(define-key evil-x-map "p" 'ispell-word)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (gruv-blue   "#83A598")
+(setq *acl2-doc-link-color* "#83A598")
+
+;; (define-key acl2-doc-mode-map "g" 'acl2-doc-go)
+;; (define-key acl2-doc-mode-map "G" 'acl2-doc-go-new-buffer)
+
+(define-key evil-x-map "." 'acl2-doc-go-from-anywhere)

@@ -64,6 +64,10 @@
   (define-key evil-window-map (kbd "TAB") 'toggle-prev-buffer)
   (define-key evil-visual-state-map "u" 'downcase-region-smart)
   (define-key evil-visual-state-map "U" 'upcase-region-smart)
+  ;; Unbind to use for other purposes
+  ;; (define-key evil-normal-state-map "x" nil)
+  (defvar evil-x-map (make-sparse-keymap))
+  (define-key evil-normal-state-map "x" evil-x-map)
   (evil-set-undo-system 'undo-redo)
 
   ;; "ns" = "named-shell"
@@ -92,6 +96,10 @@
   (add-hook 'org-mode-hook 'evil-org-mode)
   (define-key evil-normal-state-map (kbd "RET") 'evil-org-link-open))
 
+(use-package evil-cleverparens
+  :after evil
+  :ensure t)
+
 (use-package treemacs-evil
   :after (treemacs evil)
   :ensure t)
@@ -105,6 +113,7 @@
 (use-package org
   :ensure t
   :config
+  (require 'org-tempo)
   (define-skeleton org-header "" nil
     "#+title: " _ "\n#+author: Grant Jurgensen")
   :init
@@ -181,11 +190,11 @@
   :defer t)
 
 
-(use-package flycheck
-  :ensure t
-  :after exec-path-from-shell
-  ; :config (global-flycheck-mode)
-  )
+;; (use-package flycheck
+;;   :ensure t
+;;   :after exec-path-from-shell
+;;   ; :config (global-flycheck-mode)
+;;   )
 
 
 (use-package markdown-mode
@@ -237,6 +246,8 @@
 ;;               )
 ;;   :init (add-to-list 'warning-suppress-types '(copilot)))
 
+(use-package affe)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -263,8 +274,8 @@
   (set-tui-vertical-border)
   (set-face-background 'default "unspecified-bg" (selected-frame)))
 
-(defun set-gui-style ()
-  (set-frame-parameter (selected-frame) 'alpha '(97 . 95)))
+;; (defun set-gui-style ()
+;;   (set-frame-parameter (selected-frame) 'alpha '(97 . 95)))
 
 (defun set-style ()
   (interactive)
@@ -291,6 +302,8 @@
 
 (add-to-list 'default-frame-alist '(font . "Fira Code 12"))
 
+(setq-default fill-column 80)
+
 (setq-default display-line-numbers-current-absolute nil)
 (setq-default display-line-numbers-type 'relative)
 (global-display-line-numbers-mode)
@@ -310,6 +323,13 @@
 (setq-default mode-line-end-spaces nil)
 
 (setq-default whitespace-style '(face tab-mark tabs))
+;; (setq-default whitespace-style '(face tab-mark tabs newline newline-mark))
+;; (setq whitespace-display-mappings
+;;       '((space-mark 32 [183] [46])
+;;         (space-mark 160 [164] [95])
+;;         ;; (newline-mark 13 [67 82 13])
+;;         (newline-mark ?\r [?$ ?\r])
+;;         (tab-mark 9 [187 9] [92 9])))
 (setq-default custom-tab-width 2)
 (setq-default indent-tabs-mode nil)
 (global-whitespace-mode)
@@ -329,6 +349,30 @@
                 (".*\\.camkes\\'" . c-mode)
                 (".*\\.idl4\\'" . c-mode))
               auto-mode-alist))
+
+(setq completion-ignored-extensions
+      (append completion-ignored-extensions
+              '(".out"
+                ".acl2x"
+                ".cert"
+                ".cert.temp"
+                ".port"
+                ".dx32fsl"
+                ".lx32fsl"
+                ".d64fsl"
+                ".dx64fsl"
+                ".lx64fsl"
+                ".fx64fsl"
+                ".wx32fsl"
+                ".wx64fsl"
+                ".fx86fsl")))
+
+(add-hook 'dired-mode-hook 'dired-omit-mode)
+
+;; Disable special treament of things like the superscript in $x^2$ in
+;; tex files.
+;; Not working
+;; (setq font-latex-fontify-script nil)
 
 ;; term stuff
 ;; server-name doesn't seem to be set until startup
@@ -377,6 +421,14 @@
 (add-hook 'emacs-startup-hook 'fullscreen)
 (add-hook 'server-switch-hook 'fullscreen)
 (add-hook 'window-setup-hook  'fullscreen)
+
+;; TODO: move?
+(add-hook 'prog-mode-hook 'display-fill-column-indicator-mode)
+
+;; Stop warning about large files!
+;; (setq large-file-warning-threshold nil)
+;; Should be about 1gb
+(setq large-file-warning-threshold 1000000000)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

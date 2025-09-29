@@ -42,6 +42,8 @@
    (font-lock-string-face        (:foreground gruv-green))
    (font-lock-variable-name-face (:foreground gruv-yellow))
 
+   (fill-column-indicator        (:foreground gruv-bg1))
+
    (whitespace-newline           (:foreground gruv-gray))
    (whitespace-space             (:foreground gruv-gray))
    (whitespace-tab               (:foreground gruv-gray))

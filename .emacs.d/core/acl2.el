@@ -15,6 +15,13 @@
      (wload "${ACL2_ROOT}/books/interface/emacs/acl2-indent.el")
      (wload "~/.emacs.d/core/acl2-extensions.el"))
 
+;; If acl2-indent.el isn't loaded
+;; (eval-after-load 'cl-indent
+;;   '(put 'if 'common-lisp-indent-function 2))
+
+;; And for defthm:
+;; (eval-after-load 'cl-indent
+;;   '(put 'defthm 'common-lisp-indent-function 1))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -28,6 +35,9 @@
 
 (define-skeleton skel-dxm "" nil
   "(declare (xargs :measure " _ "))")
+
+(define-skeleton skel-dxt "" nil
+  "(declare (xargs :type-prescription " _ "))")
 
 (define-skeleton skel-hg "" nil
   ":hints ((\"Goal\" " _ "))")
@@ -72,6 +82,7 @@
   '(("dx"    "" skel-dx 0)
     ("dxg"   "" skel-dxg 0)
     ("dxm"   "" skel-dxm 0)
+    ("dxt"   "" skel-dxt 0)
     ("hg"    "" skel-hg 0)
     ("hind"  "" skel-hind 0)
     ("hid"   "" skel-hid 0)
@@ -87,6 +98,7 @@
     ("ghui"  "" skel-ghui 0)
     ("agj"   "; Author: Grant Jurgensen (grant@kestrel.edu)" nil 0)
     ("dxgt"  "(declare (xargs :guard t))" nil 0)
+    ("rrb"  ":rule-classes ((:rewrite :backchain-limit-lst (0)))" nil 0)
     ))
 
 (add-hook 'lisp-mode-hook
@@ -109,3 +121,15 @@
 ;; Doesn't work well right now
 (fset 'sparen
       (kmacro-lambda-form [?% ?a ?\) escape ?h ?% ?i ?\( escape ?l ?\\] 0 "%d"))
+
+(add-hook 'lisp-mode-hook
+          (lambda ()
+            (dolist (char '(?- ?< ?> ?:))
+              (modify-syntax-entry char "w"))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; spell-check
+
+(setq flyspell-issue-message-flag nil)
+(add-hook 'lisp-mode-hook 'flyspell-prog-mode)
